@@ -21,6 +21,10 @@ netModule.controller('netgraph', function($rootScope, $scope, $http) {
         });
     }
 
+    else {
+      console.log("Loading live material.");
+    }
+
   /*  $http.get("http://localhost:8080/topology/api/topology")
    .then(function (response, data, headers, status, config) {
      $scope.names = response.data;

@@ -7,7 +7,7 @@
     <div class="connect-form">
     <p>Please provide the router IP address (IPv4 or IPv6), login username and password to display network information.</p>
     <label>Type in "demo" in each field in order to see the demo version or check the checkbox.
-      <input type="checkbox" class="checkbox-demo" ng-model="demo.check">
+      <input type="checkbox" class="checkbox-demo" ng-model="demo.check" ng-change="check()">
     </label>
     <div ng-show="error" class="alert alert-danger">{{error}}</div>
     <form name="form" ng-submit="login()" role="form" ng-init="demo.check=false">
