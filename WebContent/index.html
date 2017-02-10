@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <title>Mikrotik Topology App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/breadcrumb.css">
+    <link rel="stylesheet" href="css/search.css">
+    <link rel="stylesheet" href="css/netjsongraph.css">
+
+    <!-- Libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+    <script src="node_modules/core-js/client/shim.min.js"></script>
+    <script src="node_modules/zone.js/dist/zone.js"></script>
+    <script src="node_modules/rxjs/bundles/Rx.js"></script>
+    <script src="node_modules/angular-route/angular-route.min.js"></script>
+    <script src="node_modules/angular-cookies/angular-cookies.min.js"></script>
+    <script src="node_modules/@angular/core/bundles/core.umd.js"></script>
+    <script src="node_modules/@angular/common/bundles/common.umd.js"></script>
+    <script src="node_modules/@angular/compiler/bundles/compiler.umd.js"></script>
+    <script src="node_modules/@angular/platform-browser/bundles/platform-browser.umd.js"></script>
+    <script src="node_modules/@angular/platform-browser-dynamic/bundles/platform-browser-dynamic.umd.js"></script>
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+
+    <!-- Modules -->
+    <script src='js/routes.js'></script>
+    <script src='js/main.js'></script>
+    <script src='js/topology.js'></script>
+    <script src='js/netjsongraph.js'></script>
+    <script src='js/header.js'></script>
+    <script src='js/connect.js'></script>
+    <script src='js/server.js'></script>
+
+    <base href="/index">
+  </head>
+
+  <!-- Application -->
+  <body ng-app="topologyApp">
+
+    <div ng-include src="'../html/header.htm'"></div>
+    <div ng-view></div>
+
+  </body>
+
+</html>

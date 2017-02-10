@@ -1,0 +1,30 @@
+<div class = "header">
+    <div class="title" id="title">
+        <h1>Mikrotik Network Topology</h1>
+    </div>
+
+    <div class="logo">
+        <img src='img/nuig_logo.jpg'>
+    </div>
+</div>
+
+<div class="top-nav ng-scope">
+    <div class="container-fluid">
+          <div class="row-fluid search-button-bar-container">
+              <div class="span12" ng-controller="ButtonClick">
+                
+                  <ul class="breadcrumb">
+                    <button class="button-connect" ng-click="ButtonClick($event)"><i class="icon icon-hub"></i>Connect</button>
+                    <button class="button-topology" ng-click="ButtonClick($event)" disabled="true"><i class="icon icon-topology"></i>Topology</button>
+                    <button class="button-lsa" ng-click="ButtonClick($event)" disabled="true"><i class="icon icon-list"></i>LSA Table</button>
+                    <button class="button-router" ng-click="ButtonClick($event)" disabled="true"><i class="icon icon-list"></i>Routers</button>
+                    <button class="button-network" ng-click="ButtonClick($event)" disabled="true"><i class="icon icon-list"></i>Networks</button>
+                  </ul>
+
+                  <div ng-controller="TimeCtrl" class="current-time">
+                    {{ clock | date:'d/MMM/yy HH:mm:ss' }}
+                  </div>
+              </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+		"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+		
+<hibernate-configuration>
+    <session-factory>
+    
+    <!-- Development settings, remove these when deploying -->
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.format_sql">true</property>
+        <property name="hibernate.hbm2ddl.auto">validate</property>
+    
+        <!-- Database details -->
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="hibernate.connection.datasource">java:comp/env/jdbc/mikrotik</property>
+		
+		<!-- SQL dialect -->
+		<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+      
+        <!-- Disable second-level cache. -->
+        <property name="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+        <property name="hibernate.cache.use_query_cache">false</property>
+        <property name="hibernate.cache.use_minimal_puts">false</property>
+        <property name="hibernate.max_fetch_depth">3</property>
+      
+        <!-- Enable Hibernate's automatic session context management -->
+        <property name="hibernate.current_session_context_class">thread</property>
+        
+        <!-- Enable Hibernate's enhanced generator mappings -->
+        <property name="hibernate.id.new_generator_mappings">true</property>
+        
+        <mapping class="ie.nuigalway.topology.domain.entities.Lsa"/>
+        <mapping class="ie.nuigalway.topology.domain.entities.RouterLsa"/>
+        <mapping class="ie.nuigalway.topology.domain.entities.NetworkLsa"/>
+                
+    </session-factory>
+</hibernate-configuration>
