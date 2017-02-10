@@ -19,23 +19,22 @@ connectModule.factory('AuthenticationService',
           }
           /* normal mode with real connection */
           else {
-            $rootScope.isDemo = false;
+              $rootScope.isDemo = false;
 
-            var config = {
-              method: 'POST',
-              url: 'http://localhost:8080/topology/api/mikrotik',
-              data: {
-                  'ipaddress': ipaddress, 'username': username, 'password': password === undefined ? "" : password
-              }
-           };
-            $http(config)
-                .then(function (response) {
-                    callback(response);
-                })
-                .catch(function(error){
-                  callback(error);
-                });
-
+              var config = {
+                  method: 'POST',
+                  url: 'http://localhost:8080/topology/api/mikrotik',
+                  data: {
+                      'ipaddress': ipaddress, 'username': username, 'password': password === undefined ? "" : password
+                  }
+              };
+              $http(config)
+                  .then(function (response) {
+                      callback(response);
+                  })
+                  .catch(function(error){
+                    callback(error);
+                  });
           }
         };
         return service;
@@ -61,7 +60,7 @@ connectModule.controller('connectionController',
                       });
                     }
                 } else {
-                    $scope.error = "Error " + response.status + ": " + response.data;
+                    $scope.error = "Error " + response.status + ": " + (response.data === null ? "Connection Error." : response.data);
                     $scope.dataLoading = false;
                 }
             });

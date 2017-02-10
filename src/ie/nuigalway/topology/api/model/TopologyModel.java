@@ -5,10 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class TopologyModel {
 
 	@JsonProperty
-	private Long routerid;
+	private String routerid;
 	
 	@JsonProperty
-	private Long routerinterface;
+	private String routerinterface;
 	
 	@JsonProperty
 	private Integer metric;
@@ -20,33 +20,33 @@ public class TopologyModel {
 	private Integer numrouters;
 
 	@JsonProperty
-	private Long firstaddr;
+	private String firstaddr;
 	
 	@JsonProperty
-	private Long lastaddr;
+	private String lastaddr;
 	
 	@JsonProperty
-	private Long networkaddr;
+	private String networkaddr;
 	
 	@JsonProperty
-	private Long broadcastaddr;
+	private String broadcastaddr;
 	
 	@JsonProperty
-	private Long netmask;
+	private String netmask;
 	
-	public Long getRouterid() {
+	public String getRouterid() {
 		return routerid;
 	}
 
-	public void setRouterid(Long routerid) {
+	public void setRouterid(String routerid) {
 		this.routerid = routerid;
 	}
 
-	public Long getRouterinterface() {
+	public String getRouterinterface() {
 		return routerinterface;
 	}
 
-	public void setRouterinterface(Long routerinterface) {
+	public void setRouterinterface(String routerinterface) {
 		this.routerinterface = routerinterface;
 	}
 
@@ -74,43 +74,43 @@ public class TopologyModel {
 		this.numrouters = numrouters;
 	}
 
-	public Long getFirstaddr() {
+	public String getFirstaddr() {
 		return firstaddr;
 	}
 
-	public void setFirstaddr(Long firstaddr) {
+	public void setFirstaddr(String firstaddr) {
 		this.firstaddr = firstaddr;
 	}
 
-	public Long getLastaddr() {
+	public String getLastaddr() {
 		return lastaddr;
 	}
 
-	public void setLastaddr(Long lastaddr) {
+	public void setLastaddr(String lastaddr) {
 		this.lastaddr = lastaddr;
 	}
 
-	public Long getNetworkaddr() {
+	public String getNetworkaddr() {
 		return networkaddr;
 	}
 
-	public void setNetworkaddr(Long networkaddr) {
+	public void setNetworkaddr(String networkaddr) {
 		this.networkaddr = networkaddr;
 	}
 
-	public Long getBroadcastaddr() {
+	public String getBroadcastaddr() {
 		return broadcastaddr;
 	}
 
-	public void setBroadcastaddr(Long broadcastaddr) {
+	public void setBroadcastaddr(String broadcastaddr) {
 		this.broadcastaddr = broadcastaddr;
 	}
 
-	public Long getNetmask() {
+	public String getNetmask() {
 		return netmask;
 	}
 
-	public void setNetmask(Long netmask) {
+	public void setNetmask(String netmask) {
 		this.netmask = netmask;
 	}
 	

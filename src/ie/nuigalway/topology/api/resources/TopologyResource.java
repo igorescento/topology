@@ -48,30 +48,36 @@ public class TopologyResource {
 			nlsa = netDAO.findAll();
 
 			for(RouterLsa r: rlsa){
-				
+
 				TopologyModel tm = new TopologyModel();
-				tm.setRouterid(r.getId());
-				tm.setRouterinterface(r.getData());
+				tm.setRouterid(IPv4Converter.longToIpv4(r.getId()));
+				tm.setRouterinterface(IPv4Converter.longToIpv4(r.getData()));
 				tm.setMetric(r.getMetric());
-				
+
 				for(NetworkLsa n: nlsa){
 					if(r.getData() >= n.getFirstaddr() && r.getData() <= n.getLastaddr() && n.getRoutersid().contains(r.getId().toString())){
-						tm.setRoutersid(n.getRoutersid());
+						ArrayList<String> routIp = new ArrayList<>();
+						for(String router : n.getRoutersid().split(",")){
+							if(r.getId() != Long.parseLong(router.trim())){
+								routIp.add(IPv4Converter.longToIpv4(Long.parseLong(router.trim())));
+							}
+						}
+						tm.setRoutersid(routIp.toString().replace("[", "").replace("]", ""));
 						tm.setNumrouters(n.getNumrouters());
-						tm.setFirstaddr(n.getFirstaddr());
-						tm.setLastaddr(n.getLastaddr());
-						tm.setNetworkaddr(n.getNetworkaddr());
-						tm.setBroadcastaddr(n.getBroadcastaddr());
-						tm.setNetmask(n.getNetmask());
+						tm.setFirstaddr(IPv4Converter.longToIpv4(n.getFirstaddr()));
+						tm.setLastaddr(IPv4Converter.longToIpv4(n.getLastaddr()));
+						tm.setNetworkaddr(IPv4Converter.longToIpv4(n.getNetworkaddr()));
+						tm.setBroadcastaddr(IPv4Converter.longToIpv4(n.getBroadcastaddr()));
+						tm.setNetmask(IPv4Converter.longToIpv4(n.getNetmask()));
 					}
 				}
-				
+
 				tmlist.add(tm);
 			}
 
 			sessionFactory.getCurrentSession().getTransaction().commit();
 			return tmlist;
-			
+
 		} catch (HibernateException e) {
 			e.printStackTrace();
 			sessionFactory.getCurrentSession().getTransaction().rollback();

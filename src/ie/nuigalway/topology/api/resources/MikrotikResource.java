@@ -53,11 +53,11 @@ public class MikrotikResource {
 			ApiConnection con = ApiConnection.connect(data.getIpaddress());
 			con.login(data.getUsername(), data.getPassword());
 			
-			age = minAge();
+			//age = minAge();
 			
 			List<Map<String, String>> rs = con.execute("/routing/ospf/lsa/print");
 			
-			if(compareAge(rs,age)){
+			//if(compareAge(rs,age)){
 				System.out.println("UPDATE NEEDED, DELETING PREVIOUS DATA");
 				deleteTable();
 
@@ -85,10 +85,10 @@ public class MikrotikResource {
 					addLsa(lsa);
 					listLsa.add(lsa);
 				}
-			}
+			/*}
 			else{
 				System.out.println("UPDATE NOT NEEDED");
-			}
+			}*/
 
 		} catch (MikrotikApiException e) {
 			e.printStackTrace();			

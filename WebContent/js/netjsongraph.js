@@ -215,6 +215,7 @@
              * Called when a node is clicked
              */
             onClickNode: function(n) {
+              console.log(n);
                 var overlay = d3.select(".njg-overlay"),
                     overlayInner = d3.select(".njg-overlay > .njg-inner"),
                     html = "<p><b>id</b>: " + n.id + "</p>";
@@ -407,7 +408,7 @@
                                          addClass = null;
                                          value = node.properties && node.properties[opts.nodeClassProperty];
                                      if (opts.nodeClassProperty && value) {
-                                         // if value is stirng use that as class
+                                         // if value is string use that as class
                                          if (typeof(value) === "string") {
                                              addClass = value;
                                          }
@@ -422,10 +423,11 @@
                                      return baseClass;
                                  })
                                  .attr("r", opts.circleRadius)
+                                 .attr("id", function(d, i) { return d.type })
                                  .on("click", opts.onClickNode)
-                                 .call(drag);
+                                 .call(drag),
 
-                    var labels = groups.append('text')
+                    labels = groups.append('text')
                                        .text(function(n){ return n.label || n.id })
                                        .attr('dx', opts.labelDx)
                                        .attr('dy', opts.labelDy)
@@ -452,10 +454,22 @@
                 // into something else
                 if(opts.defaultStyle) {
                     var colors = d3.scale.category20c();
+
                     node.style({
                         "fill": function(d){ return colors(d.linkCount); },
                         "cursor": "pointer"
                     });
+
+                    /*for(var i = 0; i < node.data().length; i++){
+                      console.log(i);
+                      console.log(node.data()[i]);
+                    };*/
+                  /*  else {
+                      node.style({
+                          "fill": '#ff8000',
+                          "cursor": "pointer"
+                      });
+                    }*/
                 }
                 // Metadata style
                 if(opts.metadata) {

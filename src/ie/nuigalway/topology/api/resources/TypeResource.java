@@ -227,7 +227,7 @@ public class TypeResource {
 			sessionFactory.getCurrentSession().getTransaction().begin();
 
 			int result = routerDAO.delete();
-			System.out.println("DELETED ROWS: " + result);
+			System.out.println("DELETED ROWS IN ROUTER TABLE: " + result);
 
 			sessionFactory.getCurrentSession().getTransaction().commit();
 			return Response.ok().build();

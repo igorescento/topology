@@ -308,3 +308,7 @@ body{ overflow: hidden }
 .checkbox-demo {
   vertical-align: top;
 }
+
+#switch {
+  fill: #ff8000;
+}

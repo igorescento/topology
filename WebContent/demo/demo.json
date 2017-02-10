@@ -1,6 +1,6 @@
 {
     "type": "NetworkGraph",
-    "label": "Summary",
+    "label": "Network Summary",
     "protocol": "OSPF",
     "version": "0.6.6.2",
     "revision": "abcdef",
