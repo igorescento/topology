@@ -6,7 +6,7 @@
     'ngRoute',
     'header',
     'connect',
-    'server'
+    'lsa'
   ])
 
   /* set global variables in root scope*/

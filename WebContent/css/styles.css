@@ -312,3 +312,9 @@ body{ overflow: hidden }
 #switch {
   fill: #ff8000;
 }
+
+/* lsa.htm styles */
+.lsa {
+  width: 400px;
+  margin: 10px auto;
+}
