@@ -1,6 +1,6 @@
 var netModule = angular.module('topology', []);
 
-netModule.controller('netgraph', function($rootScope, $scope, $http, $window) {
+netModule.controller('netgraph', function($rootScope, $scope, $http) {
 
     /* load JSON with demo data */
     if($rootScope.isDemo){

@@ -23,6 +23,7 @@ import javax.ws.rs.POST;
 import ie.nuigalway.topology.api.exceptions.BasicException;
 import ie.nuigalway.topology.api.model.ConnDataModel;
 import ie.nuigalway.topology.api.model.LsaModel;
+import ie.nuigalway.topology.api.model.LsaModelConverted;
 import ie.nuigalway.topology.domain.dao.hibernate.LsaDAO;
 import ie.nuigalway.topology.domain.entities.Lsa;
 import ie.nuigalway.topology.util.database.HibernateUtil;
@@ -45,7 +46,7 @@ public class MikrotikResource {
 	public Response retrieveLsa(ConnDataModel data){
 		
 		List<LsaModel> listLsa = new ArrayList<>();
-		int age;
+		//int age;
 
 		//login to router and retrieve LSA table
 		try {
@@ -105,15 +106,15 @@ public class MikrotikResource {
 	@GET
 	@Path("lsa")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Collection<LsaModel> getAllLsa() {
+	public Collection<LsaModelConverted> getAllLsa() {
 		try {
 			sessionFactory.getCurrentSession().getTransaction().begin();
 			
 			Collection<Lsa> lsaList = lsaDAOHibernate.findAll();
-			Collection<LsaModel> lsaModelList = new ArrayList<LsaModel>();
+			Collection<LsaModelConverted> lsaModelList = new ArrayList<LsaModelConverted>();
 			
 			for(Lsa l : lsaList) {
-				lsaModelList.add(new LsaModel(l));
+				lsaModelList.add(new LsaModelConverted(l));
 			}
 			
 			sessionFactory.getCurrentSession().getTransaction().commit();

@@ -1,31 +1,47 @@
-<div class="lsa" ng-controller="LsaCtrl">
+<div class=lsa ng-controller="LsaCtrl">
+    <div class=lsa-header>
+          <div class=lsa-header-title>
+            <h4>LSA Table (Total rows: {{totalRows}})</h4>
+          </div>
 
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>
-          <a href="#" ng-click="orderByField='firstName'; reverseSort = !reverseSort">
-          First Name <span ng-show="orderByField == 'firstName'"><span ng-show="!reverseSort">^</span><span ng-show="reverseSort">v</span></span>
-          </a>
-        </th>
-        <th>
-          <a href="#" ng-click="orderByField='lastName'; reverseSort = !reverseSort">
-            Last Name <span ng-show="orderByField == 'lastName'"><span ng-show="!reverseSort">^</span><span ng-show="reverseSort">v</span></span>
-          </a>
-        </th>
-        <th>
-          <a href="#" ng-click="orderByField='age'; reverseSort = !reverseSort">
-          Age <span ng-show="orderByField == 'age'"><span ng-show="!reverseSort">^</span><span ng-show="reverseSort">v</span></span>
-          </a>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr ng-repeat="emp in data.employees|orderBy:orderByField:reverseSort">
-        <td>{{emp.firstName}}</td>
-        <td>{{emp.lastName}}</td>
-        <td>{{emp.age}}</td>
-      </tr>
-    </tbody>
+          <div class="lsa-header-filter">
+            <form>
+              <span class="lsa-header-filter-left"><i class="lsa-header-filter-icon"></i></span>
+              <select ng-model="filterList" id="lsaselect">
+                <option value="">All</option>
+                <option ng-repeat="data in singleSelect" value="{{data.name}}">{{data.value}}</option>
+              </select>
+              <input type="text" class="lsa-header-filter-input" id="lsasearch" placeholder="Search LSA" ng-model="lsasearch">
+            </form>
+          </div>
+    </div>
+
+    <div class="lsatable">
+
+      <table class="table table-striped table-condensed table-hover">
+
+        <thead>
+            <tr>
+                <th class="lsatable-id" custom-sort order="'id'" sort="sort">ID&nbsp;</th>
+                <th class="lsatable-instance" custom-sort order="'instance'" sort="sort">Instance&nbsp;</th>
+                <th class="lsatable-area" custom-sort order="'area'" sort="sort">Area&nbsp;</th>
+                <th class="lsatable-type" custom-sort order="'type'" sort="sort">Type&nbsp;</th>
+                <th class="lsatable-originator" custom-sort order="'originator'" sort="sort">Originator&nbsp;</th>
+                <th class="lsatable-body" custom-sort order="'body'" sort="sort">Body&nbsp;</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr ng-repeat="item in items | orderBy:sort.sortingOrder:sort.reverse | searchFilter:{term:lsasearch, type:filterList} | filter: lsasearch">
+                <td>{{item.id}}</td>
+                <td>{{item.instance}}</td>
+                <td>{{item.area}}</td>
+                <td>{{item.type}}</td>
+                <td>{{item.originator}}</td>
+                <td>{{item.body}}</td>
+            </tr>
+        </tbody>
     </table>
+
+    </div>
 </div>

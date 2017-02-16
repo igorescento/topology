@@ -145,7 +145,7 @@ body{ overflow: hidden }
     stroke-opacity: 0.7 !important
 }
 
-/* legend */
+/* topology.htm styles */
 #legend{
     position: relative;
     display: flex;
@@ -315,6 +315,101 @@ body{ overflow: hidden }
 
 /* lsa.htm styles */
 .lsa {
-  width: 400px;
-  margin: 10px auto;
+    height: 75%;
+}
+
+.lsa-header {
+    height: 30px;
+    display: inline-flex;
+    width: 100%;
+    margin: 0px 30px 0px 30px;
+}
+
+.lsa-header-title {
+    width: 50%;
+}
+
+.lsa-header-filter {
+    width: 400px;
+    height: 30px;
+    margin: 5px 10px 5px 10px;
+    border-radius: 4px;
+    background: #318ec5;
+    position: absolute;
+    right: 10px;
+}
+
+.lsa-header-filter-left {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    display: inline-flex;
+    background-color: #318ec5;
+    position: absolute;
+    margin: 2px 2px 2px 2px;
+}
+
+.lsa-header-filter-icon {
+  background: url('../img/ic_search_black_24dp.png') no-repeat;
+  background-size: 16px 16px;
+  height: 14px;
+  width: 14px;
+  margin: 4px 5px 2px 4px;
+}
+
+input#lsasearch {
+    display: inline-flex;
+    height: 24px;
+    margin-top: 3px;
+    width: 240px;
+}
+
+select#lsaselect {
+    height: 24px;
+    margin-left: 28px;
+    margin-top: 3px;
+    width: 120px;
+    padding: 0;
+}
+
+.lsatable {
+    width: auto;
+    margin: 10px 20px 20px 20px;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.icon_sort {
+    background: url('../img/icon_sort.png') no-repeat;
+    background-size: 12px 12px;
+    height: 14px;
+    width: 14px;
+    margin: 0px 5px 2px 0px;
+    float: right;
+}
+
+.icon_sort_asc {
+    background: url('../img/icon_sort_asc.png') no-repeat;
+    background-size: 12px 12px;
+    height: 14px;
+    width: 14px;
+    margin: 0px 5px 2px 0px;
+    float: right;
+}
+
+.icon_sort_desc {
+    background: url('../img/icon_sort_desc.png') no-repeat;
+    background-size: 12px 12px;
+    height: 14px;
+    width: 14px;
+    margin: 0px 5px 2px 0px;
+    float: right;
+}
+
+.lsatable-id,.lsatable-originator,.lsatable-instance {
+    width: 120px;
+}
+
+.lsatable-type,.lsatable-area {
+    width: 100px;
 }
