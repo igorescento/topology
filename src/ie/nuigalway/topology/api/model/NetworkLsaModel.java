@@ -1,7 +1,10 @@
 package ie.nuigalway.topology.api.model;
 
+import java.util.ArrayList;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import ie.nuigalway.topology.api.resources.IPv4Converter;
 import ie.nuigalway.topology.domain.entities.NetworkLsa;
 
 public class NetworkLsaModel {
@@ -14,10 +17,10 @@ public class NetworkLsaModel {
 
 	@JsonProperty
 	private Long netmask;
-	
+
 	@JsonProperty
 	private String routersid;
-	
+
 	@JsonProperty
 	private Integer numrouters;
 
@@ -26,13 +29,13 @@ public class NetworkLsaModel {
 
 	@JsonProperty
 	private Long firstaddr;
-	
+
 	@JsonProperty
 	private Long lastaddr;
-	
+
 	@JsonProperty
 	private Long networkaddr;
-	
+
 	@JsonProperty
 	private Long broadcastaddr;
 
@@ -51,8 +54,8 @@ public class NetworkLsaModel {
 		this.broadcastaddr = nl.getBroadcastaddr();
 	}
 
-	public Long getId() {
-		return id;
+	public String getId() {
+		return IPv4Converter.longToIpv4(id);
 	}
 
 	public void setId(Long id) {
@@ -67,8 +70,8 @@ public class NetworkLsaModel {
 		this.type = type;
 	}
 
-	public Long getNetmask() {
-		return netmask;
+	public String getNetmask() {
+		return IPv4Converter.longToIpv4(netmask);
 	}
 
 	public void setNetmask(Long netmask) {
@@ -76,7 +79,11 @@ public class NetworkLsaModel {
 	}
 
 	public String getRoutersid() {
-		return routersid;
+		ArrayList<String> routIp = new ArrayList<>();
+		for(String router : routersid.split(",")){
+			routIp.add(IPv4Converter.longToIpv4(Long.parseLong(router.trim())));
+		}
+		return routIp.toString().replace("[", "").replace("]", "");
 	}
 
 	public void setRoutersid(String routersid) {
@@ -91,46 +98,46 @@ public class NetworkLsaModel {
 		this.numrouters = numrouters;
 	}
 
-	public Long getOriginator() {
-		return originator;
+	public String getOriginator() {
+		return IPv4Converter.longToIpv4(originator);
 	}
 
 	public void setOriginator(Long originator) {
 		this.originator = originator;
 	}
-	
-	public Long getFirstaddr() {
-		return firstaddr;
+
+	public String getFirstaddr() {
+		return IPv4Converter.longToIpv4(firstaddr);
 	}
 
 	public void setFirstaddr(Long firstAddr) {
 		this.firstaddr = firstAddr;
 	}
 
-	public Long getLastaddr() {
-		return lastaddr;
+	public String getLastaddr() {
+		return IPv4Converter.longToIpv4(lastaddr);
 	}
 
 	public void setLastaddr(Long lastAddr) {
 		this.lastaddr = lastAddr;
 	}
 
-	public Long getNetworkaddr() {
-		return networkaddr;
+	public String getNetworkaddr() {
+		return IPv4Converter.longToIpv4(networkaddr);
 	}
 
 	public void setNetworkAddr(Long networkAddr) {
 		this.networkaddr = networkAddr;
 	}
 
-	public Long getBroadcastaddr() {
-		return broadcastaddr;
+	public String getBroadcastaddr() {
+		return IPv4Converter.longToIpv4(broadcastaddr);
 	}
 
 	public void setBroadcastaddr(Long broadcastAddr) {
 		this.broadcastaddr = broadcastAddr;
 	}
-	
+
 	public NetworkLsa toEntity() {
 		NetworkLsa nlsa = new NetworkLsa();
 
@@ -144,7 +151,7 @@ public class NetworkLsaModel {
 		nlsa.setLastaddr(lastaddr);
 		nlsa.setNetworkaddr(networkaddr);
 		nlsa.setBroadcastaddr(broadcastaddr);
-		
+
 		return nlsa;
 	}
 }

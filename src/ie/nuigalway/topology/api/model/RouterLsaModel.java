@@ -2,6 +2,7 @@ package ie.nuigalway.topology.api.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import ie.nuigalway.topology.api.resources.IPv4Converter;
 import ie.nuigalway.topology.domain.entities.RouterLsa;
 
 public class RouterLsaModel {
@@ -43,16 +44,16 @@ public class RouterLsaModel {
 		this.linktype = linktype;
 	}
 
-	public Long getBodyid() {
-		return bodyid;
+	public String getBodyid() {
+		return IPv4Converter.longToIpv4(bodyid);
 	}
 
 	public void setBodyid(Long bodyid) {
 		this.bodyid = bodyid;
 	}
 
-	public Long getData() {
-		return data;
+	public String getData() {
+		return IPv4Converter.longToIpv4(data);
 	}
 
 	public void setData(Long data) {
@@ -67,8 +68,8 @@ public class RouterLsaModel {
 		this.metric = metric;
 	}
 	
-	public Long getId() {
-		return id;
+	public String getId() {
+		return IPv4Converter.longToIpv4(id);
 	}
 
 	public void setId(Long id) {

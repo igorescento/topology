@@ -1,0 +1,45 @@
+<div class="router">
+    <div class=router-header>
+          <div class=router-header-title>
+            <h4>Routers & Interfaces (Total rows: {{totalRows}})</h4>
+          </div>
+
+          <div class="router-header-filter">
+            <form>
+              <span class="router-header-filter-left"><i class="router-header-filter-icon"></i></span>
+              <select ng-model="filterList" id="routerselect">
+                <option value="">All</option>
+                <option ng-repeat="data in singleSelect" value="{{data.name}}">{{data.value}}</option>
+              </select>
+              <input type="text" class="router-header-filter-input" id="routersearch" placeholder="Search {{filterList}}" ng-model="routersearch">
+            </form>
+          </div>
+    </div>
+
+    <div class="routertable">
+
+      <table class="table table-striped table-condensed table-hover" id="routertable">
+
+        <thead>
+            <tr>
+                <th class="routertable-id" custom-sort order="'id'" sort="sort">ID&nbsp;</th>
+                <th class="routertable-linktype" custom-sort order="'linktype'" sort="sort">Link Type&nbsp;</th>
+                <th class="routertable-bodyid" custom-sort order="'bodyid'" sort="sort">Body ID&nbsp;</th>
+                <th class="routertable-data" custom-sort order="'data'" sort="sort">Data&nbsp;</th>
+                <th class="routertable-metric" custom-sort order="'metric'" sort="sort">Metric&nbsp;</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr ng-repeat="item in items | orderBy:sort.sortingOrder:sort.reverse:ipComparator | searchFilter:{term:routersearch, type:filterList} | filter: routersearch">
+                <td>{{item.id}}</td>
+                <td>{{item.linktype}}</td>
+                <td>{{item.bodyid}}</td>
+                <td>{{item.data}}</td>
+                <td>{{item.metric}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    </div>
+</div>

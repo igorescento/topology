@@ -1,0 +1,110 @@
+[
+  {
+    "id": "10.168.3.2",
+    "type": "network",
+    "netmask": "255.255.255.252",
+    "routersid": "10.255.255.2, 10.255.255.1",
+    "numrouters": 2,
+    "originator": "10.255.255.2",
+    "firstaddr": "10.168.3.1",
+    "lastaddr": "10.168.3.2",
+    "networkaddr": "10.168.3.0",
+    "broadcastaddr": "10.168.3.3"
+  },
+  {
+    "id": "10.168.3.6",
+    "type": "network",
+    "netmask": "255.255.255.252",
+    "routersid": "10.255.255.3, 10.255.255.1",
+    "numrouters": 2,
+    "originator": "10.255.255.3",
+    "firstaddr": "10.168.3.5",
+    "lastaddr": "10.168.3.6",
+    "networkaddr": "10.168.3.4",
+    "broadcastaddr": "10.168.3.7"
+  },
+  {
+    "id": "10.168.3.10",
+    "type": "network",
+    "netmask": "255.255.255.252",
+    "routersid": "10.255.255.4, 10.255.255.3",
+    "numrouters": 2,
+    "originator": "10.255.255.4",
+    "firstaddr": "10.168.3.9",
+    "lastaddr": "10.168.3.10",
+    "networkaddr": "10.168.3.8",
+    "broadcastaddr": "10.168.3.11"
+  },
+  {
+    "id": "10.168.4.2",
+    "type": "network",
+    "netmask": "255.255.255.248",
+    "routersid": "10.255.255.5, 10.255.255.4",
+    "numrouters": 2,
+    "originator": "10.255.255.5",
+    "firstaddr": "10.168.4.1",
+    "lastaddr": "10.168.4.6",
+    "networkaddr": "10.168.4.0",
+    "broadcastaddr": "10.168.4.7"
+  },
+  {
+    "id": "10.168.5.1",
+    "type": "network",
+    "netmask": "255.255.255.240",
+    "routersid": "10.255.255.5, 10.255.255.1",
+    "numrouters": 2,
+    "originator": "10.255.255.5",
+    "firstaddr": "10.168.5.1",
+    "lastaddr": "10.168.5.14",
+    "networkaddr": "10.168.5.0",
+    "broadcastaddr": "10.168.5.15"
+  },
+  {
+    "id": "10.168.7.2",
+    "type": "network",
+    "netmask": "255.255.255.0",
+    "routersid": "10.255.255.7, 10.255.255.5",
+    "numrouters": 2,
+    "originator": "10.255.255.7",
+    "firstaddr": "10.168.7.1",
+    "lastaddr": "10.168.7.254",
+    "networkaddr": "10.168.7.0",
+    "broadcastaddr": "10.168.7.255"
+  },
+  {
+    "id": "10.169.0.2",
+    "type": "network",
+    "netmask": "255.255.0.0",
+    "routersid": "10.255.255.8, 10.255.255.4",
+    "numrouters": 2,
+    "originator": "10.255.255.8",
+    "firstaddr": "10.169.0.1",
+    "lastaddr": "10.169.255.254",
+    "networkaddr": "10.169.0.0",
+    "broadcastaddr": "10.169.255.255"
+  },
+  {
+    "id": "10.170.0.1",
+    "type": "network",
+    "netmask": "255.255.240.0",
+    "routersid": "10.255.255.6, 10.255.255.2",
+    "numrouters": 2,
+    "originator": "10.255.255.6",
+    "firstaddr": "10.170.0.1",
+    "lastaddr": "10.170.15.254",
+    "networkaddr": "10.170.0.0",
+    "broadcastaddr": "10.170.15.255"
+  },
+  {
+    "id": "172.17.5.5",
+    "type": "network",
+    "netmask": "255.255.0.0",
+    "routersid": "10.255.255.10, 10.255.255.9, 10.255.255.3",
+    "numrouters": 3,
+    "originator": "10.255.255.10",
+    "firstaddr": "172.17.0.1",
+    "lastaddr": "172.17.255.254",
+    "networkaddr": "172.17.0.0",
+    "broadcastaddr": "172.17.255.255"
+  }
+]

@@ -13,7 +13,7 @@ var routesModule = angular.module('routes',['ngRoute']);
           // route for topology
           .when('/topology', {
               templateUrl: 'html/topology.htm',
-              controller: 'topologyController',
+              controller: 'netgraph',
               resolve: {
                 factory : function ($rootScope, $location) {
                     if(!$rootScope.isDataLoaded){
@@ -26,7 +26,7 @@ var routesModule = angular.module('routes',['ngRoute']);
           // route for the lsa info
           .when('/lsa', {
               templateUrl : 'html/lsa.htm',
-              controller  : 'lsaController',
+              controller: 'lsaController',
               resolve: {
                 factory : function ($rootScope, $location) {
                     if(!$rootScope.isDataLoaded){
@@ -39,7 +39,7 @@ var routesModule = angular.module('routes',['ngRoute']);
           // route for the routers page
           .when('/routers', {
               templateUrl : 'html/routers.htm',
-              controller  : 'routersController',
+              controller: 'routersController',
               resolve: {
                 factory : function ($rootScope, $location) {
                     if(!$rootScope.isDataLoaded){
@@ -52,7 +52,7 @@ var routesModule = angular.module('routes',['ngRoute']);
           // route for the networks page
           .when('/networks', {
               templateUrl : 'html/networks.htm',
-              controller  : 'networksController',
+              controller: 'networksController',
               resolve: {
                 factory : function ($rootScope, $location) {
                     if(!$rootScope.isDataLoaded){
@@ -68,16 +68,4 @@ var routesModule = angular.module('routes',['ngRoute']);
           });
 
       $locationProvider.html5Mode(true).hashPrefix('!');
-  });
-
-  routesModule.controller('lsaController', function($scope) {
-      $scope.message = 'LSA Table';
-  });
-
-  routesModule.controller('routersController', function($scope) {
-      $scope.message = 'Routers table.';
-  });
-
-  routesModule.controller('topologyController', function($scope) {
-      $scope.message = 'Network Map';
   });

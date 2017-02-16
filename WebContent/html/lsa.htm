@@ -1,4 +1,4 @@
-<div class=lsa ng-controller="LsaCtrl">
+<div class="lsa">
     <div class=lsa-header>
           <div class=lsa-header-title>
             <h4>LSA Table (Total rows: {{totalRows}})</h4>
@@ -11,14 +11,14 @@
                 <option value="">All</option>
                 <option ng-repeat="data in singleSelect" value="{{data.name}}">{{data.value}}</option>
               </select>
-              <input type="text" class="lsa-header-filter-input" id="lsasearch" placeholder="Search LSA" ng-model="lsasearch">
+              <input type="text" class="lsa-header-filter-input" id="lsasearch" placeholder="Search {{filterList}}" ng-model="lsasearch">
             </form>
           </div>
     </div>
 
     <div class="lsatable">
 
-      <table class="table table-striped table-condensed table-hover">
+      <table class="table table-striped table-condensed table-hover" id="lsatable">
 
         <thead>
             <tr>
@@ -32,7 +32,7 @@
         </thead>
 
         <tbody>
-            <tr ng-repeat="item in items | orderBy:sort.sortingOrder:sort.reverse | searchFilter:{term:lsasearch, type:filterList} | filter: lsasearch">
+            <tr ng-repeat="item in items | orderBy:sort.sortingOrder:sort.reverse:ipComparator | searchFilter:{term:lsasearch, type:filterList} | filter: lsasearch">
                 <td>{{item.id}}</td>
                 <td>{{item.instance}}</td>
                 <td>{{item.area}}</td>

@@ -350,10 +350,10 @@ body{ overflow: hidden }
 }
 
 .lsa-header-filter-icon {
-  background: url('../img/ic_search_black_24dp.png') no-repeat;
-  background-size: 16px 16px;
-  height: 14px;
-  width: 14px;
+  background: url('../img/ic_search_white_24dp.png') no-repeat;
+  background-size: 18px 18px;
+  height: 18px;
+  width: 18px;
   margin: 4px 5px 2px 4px;
 }
 
@@ -377,6 +377,10 @@ select#lsaselect {
     margin: 10px 20px 20px 20px;
     height: 100%;
     overflow-y: auto;
+}
+
+table#lsatable {
+  font-size: 13px;
 }
 
 .icon_sort {
@@ -412,4 +416,144 @@ select#lsaselect {
 
 .lsatable-type,.lsatable-area {
     width: 100px;
+}
+
+/* routers.htm styles */
+.router {
+    height: 75%;
+}
+
+.router-header {
+    height: 30px;
+    display: inline-flex;
+    width: 100%;
+    margin: 0px 30px 0px 30px;
+}
+
+.router-header-title {
+    width: 50%;
+}
+
+.router-header-filter {
+    width: 400px;
+    height: 30px;
+    margin: 5px 10px 5px 10px;
+    border-radius: 4px;
+    background: #318ec5;
+    position: absolute;
+    right: 10px;
+}
+
+.router-header-filter-left {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    display: inline-flex;
+    background-color: #318ec5;
+    position: absolute;
+    margin: 2px 2px 2px 2px;
+}
+
+.router-header-filter-icon {
+  background: url('../img/ic_search_white_24dp.png') no-repeat;
+  background-size: 18px 18px;
+  height: 18px;
+  width: 18px;
+  margin: 4px 5px 2px 4px;
+}
+
+input#routersearch {
+    display: inline-flex;
+    height: 24px;
+    margin-top: 3px;
+    width: 240px;
+}
+
+select#routerselect {
+    height: 24px;
+    margin-left: 28px;
+    margin-top: 3px;
+    width: 120px;
+    padding: 0;
+}
+
+.routertable {
+    width: auto;
+    margin: 10px 20px 20px 20px;
+    height: 100%;
+    overflow-y: auto;
+}
+
+table#routertable {
+  font-size: 13px;
+}
+
+/* networks.htm styles */
+.network {
+    height: 75%;
+}
+
+.network-header {
+    height: 30px;
+    display: inline-flex;
+    width: 100%;
+    margin: 0px 30px 0px 30px;
+}
+
+.network-header-title {
+    width: 50%;
+}
+
+.network-header-filter {
+    width: 400px;
+    height: 30px;
+    margin: 5px 10px 5px 10px;
+    border-radius: 4px;
+    background: #318ec5;
+    position: absolute;
+    right: 10px;
+}
+
+.network-header-filter-left {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    display: inline-flex;
+    background-color: #318ec5;
+    position: absolute;
+    margin: 2px 2px 2px 2px;
+}
+
+.network-header-filter-icon {
+  background: url('../img/ic_search_white_24dp.png') no-repeat;
+  background-size: 18px 18px;
+  height: 18px;
+  width: 18px;
+  margin: 4px 5px 2px 4px;
+}
+
+input#networksearch {
+    display: inline-flex;
+    height: 24px;
+    margin-top: 3px;
+    width: 240px;
+}
+
+select#networkselect {
+    height: 24px;
+    margin-left: 28px;
+    margin-top: 3px;
+    width: 120px;
+    padding: 0;
+}
+
+.network-table {
+    width: auto;
+    margin: 10px 20px 20px 20px;
+    height: 100%;
+    overflow-y: auto;
+}
+
+table#networktable {
+  font-size: 13px;
 }

@@ -1,14 +1,12 @@
-var lsa = angular.module('lsa', []);
+var router = angular.module('router', []);
 
-lsa.controller('lsaController', function($rootScope, $scope, $http, $location) {
+router.controller('routersController', function($rootScope, $scope, $http, $location) {
 
   var headers = [
     { name: "id", value:"ID" },
-    { name: "instance", value:"Instance" },
-    { name: "area", value:"Area"},
-    { name: "type", value:"Type"},
-    { name: "originator", value:"Originator"},
-    { name: "body", value:"Body"}
+    { name: "linktype", value:"Link Type"},
+    { name: "bodyid", value:"Body ID"},
+    { name: "metric", value:"Metric"}
   ];
 
   $scope.singleSelect = headers;
@@ -20,7 +18,7 @@ lsa.controller('lsaController', function($rootScope, $scope, $http, $location) {
 
   /* load JSON with demo data */
   if($rootScope.isDemo){
-      $http.get('../demo/demo_lsa.json')
+      $http.get('../demo/demo_router.json')
           .then(function(res){
               $scope.items = res.data;
               $scope.totalRows = res.data.length;
@@ -32,18 +30,18 @@ lsa.controller('lsaController', function($rootScope, $scope, $http, $location) {
 
   }
   else {
-    console.log("Live LSA table");
+    console.log("Live Router table");
     /* config to fetch live data from DB */
     var config = {
         method: 'GET',
-        url: 'http://localhost:8080/topology/api/mikrotik/lsa'
+        url: 'http://localhost:8080/topology/api/type/router'
     };
     $http(config)
         .then(function (response) {
             $scope.items = response.data;
         })
         .catch(function(error){
-            console.log("ERROR RETRIEVING LSA DATA: " + error);
+            console.log("ERROR RETRIEVING ROUTER DATA: " + error);
             $location.path('/connect');
 
         });
@@ -93,10 +91,12 @@ lsa.controller('lsaController', function($rootScope, $scope, $http, $location) {
     return (v1.index < v2.index) ? -1 : 1;
   }
 };
+
 })
 
 /* custom filter implementation */
-lsa.filter('searchFilter', function() {
+router.filter('searchFilter', function() {
+
     return function(input, option) {
         if (!option.type || !option.term) {
             return input;
@@ -110,45 +110,4 @@ lsa.filter('searchFilter', function() {
         })
         return result;
     }
-});
-
-lsa.directive("customSort", function() {
-return {
-    restrict: 'A',
-    transclude: true,
-    scope: {
-      order: '=',
-      sort: '='
-    },
-    template :
-      ' <a ng-click="sort_by(order)" style="color: #555555;">'+
-      '    <span ng-transclude></span>'+
-      '    <i ng-class="selectedCls(order)"></i>'+
-      '</a>',
-    link: function(scope) {
-
-    /* sort order change */
-    scope.sort_by = function(newSortOr) {
-        var sort = scope.sort;
-        if(newSortOr === "id" || newSortOr === "originator"){
-
-        }
-        if (sort.sortingOrder == newSortOr){
-            sort.reverse = !sort.reverse;
-        }
-
-        sort.sortingOrder = newSortOr;
-    };
-
-    /* trigger between icons when sort applied and switch order */
-    scope.selectedCls = function(column) {
-        if(column == scope.sort.sortingOrder){
-            return ('icon_sort_' + ((scope.sort.reverse) ? 'desc' : 'asc'));
-        }
-        else{
-            return'icon_sort'
-        }
-    };
-  }
-}
 });

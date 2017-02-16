@@ -1,14 +1,17 @@
-var lsa = angular.module('lsa', []);
+var network = angular.module('network', []);
 
-lsa.controller('lsaController', function($rootScope, $scope, $http, $location) {
+network.controller('networksController', function($rootScope, $scope, $http, $location) {
 
   var headers = [
     { name: "id", value:"ID" },
-    { name: "instance", value:"Instance" },
-    { name: "area", value:"Area"},
-    { name: "type", value:"Type"},
+    { name: "netmask", value:"Mask"},
+    { name: "routersid", value:"Routers"},
+    { name: "numrouters", value:"# of Routers" },
     { name: "originator", value:"Originator"},
-    { name: "body", value:"Body"}
+    { name: "firstaddr", value:"First IP"},
+    { name: "lastaddr", value:"Last IP"},
+    { name: "networkaddr", value:"Network IP"},
+    { name: "broadcastaddr", value:"Broadcast IP"}
   ];
 
   $scope.singleSelect = headers;
@@ -20,7 +23,7 @@ lsa.controller('lsaController', function($rootScope, $scope, $http, $location) {
 
   /* load JSON with demo data */
   if($rootScope.isDemo){
-      $http.get('../demo/demo_lsa.json')
+      $http.get('../demo/demo_network.json')
           .then(function(res){
               $scope.items = res.data;
               $scope.totalRows = res.data.length;
@@ -32,18 +35,18 @@ lsa.controller('lsaController', function($rootScope, $scope, $http, $location) {
 
   }
   else {
-    console.log("Live LSA table");
+    console.log("Live Networks table");
     /* config to fetch live data from DB */
     var config = {
         method: 'GET',
-        url: 'http://localhost:8080/topology/api/mikrotik/lsa'
+        url: 'http://localhost:8080/topology/api/type/network'
     };
     $http(config)
         .then(function (response) {
             $scope.items = response.data;
         })
         .catch(function(error){
-            console.log("ERROR RETRIEVING LSA DATA: " + error);
+            console.log("ERROR RETRIEVING Net DATA: " + error);
             $location.path('/connect');
 
         });
@@ -93,10 +96,12 @@ lsa.controller('lsaController', function($rootScope, $scope, $http, $location) {
     return (v1.index < v2.index) ? -1 : 1;
   }
 };
+
 })
 
 /* custom filter implementation */
-lsa.filter('searchFilter', function() {
+network.filter('searchFilter', function() {
+
     return function(input, option) {
         if (!option.type || !option.term) {
             return input;
@@ -110,45 +115,4 @@ lsa.filter('searchFilter', function() {
         })
         return result;
     }
-});
-
-lsa.directive("customSort", function() {
-return {
-    restrict: 'A',
-    transclude: true,
-    scope: {
-      order: '=',
-      sort: '='
-    },
-    template :
-      ' <a ng-click="sort_by(order)" style="color: #555555;">'+
-      '    <span ng-transclude></span>'+
-      '    <i ng-class="selectedCls(order)"></i>'+
-      '</a>',
-    link: function(scope) {
-
-    /* sort order change */
-    scope.sort_by = function(newSortOr) {
-        var sort = scope.sort;
-        if(newSortOr === "id" || newSortOr === "originator"){
-
-        }
-        if (sort.sortingOrder == newSortOr){
-            sort.reverse = !sort.reverse;
-        }
-
-        sort.sortingOrder = newSortOr;
-    };
-
-    /* trigger between icons when sort applied and switch order */
-    scope.selectedCls = function(column) {
-        if(column == scope.sort.sortingOrder){
-            return ('icon_sort_' + ((scope.sort.reverse) ? 'desc' : 'asc'));
-        }
-        else{
-            return'icon_sort'
-        }
-    };
-  }
-}
 });

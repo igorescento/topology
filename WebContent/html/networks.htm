@@ -1,0 +1,53 @@
+<div class="network">
+    <div class=network-header>
+          <div class=network-header-title>
+            <h4>Networks (Total rows: {{totalRows}})</h4>
+          </div>
+
+          <div class="network-header-filter">
+            <form>
+              <span class="network-header-filter-left"><i class="network-header-filter-icon"></i></span>
+              <select ng-model="filterList" id="routerselect">
+                <option value="">All</option>
+                <option ng-repeat="data in singleSelect" value="{{data.name}}">{{data.value}}</option>
+              </select>
+              <input type="text" class="network-header-filter-input" id="networksearch" placeholder="Search {{filterList}}" ng-model="networksearch">
+            </form>
+          </div>
+    </div>
+
+    <div class="network-table">
+
+      <table class="table table-striped table-condensed table-hover" id="networktable">
+
+        <thead>
+            <tr>
+                <th class="networktable-id" custom-sort order="'id'" sort="sort">ID&nbsp;</th>
+                <th class="networktable-netmask" custom-sort order="'netmask'" sort="sort">Mask&nbsp;</th>
+                <th class="networktable-routersid" custom-sort order="'routersid'" sort="sort">Routers&nbsp;</th>
+                <th class="networktable-numrouters" custom-sort order="'numrouters'" sort="sort"># of Routers&nbsp;</th>
+                <th class="networktable-originator" custom-sort order="'originator'" sort="sort">Originator&nbsp;</th>
+                <th class="networktable-firstaddr" custom-sort order="'firstaddr'" sort="sort">First IP&nbsp;</th>
+                <th class="networktable-lastaddr" custom-sort order="'lastaddr'" sort="sort">Last IP&nbsp;</th>
+                <th class="networktable-networkaddr" custom-sort order="'networkaddr'" sort="sort">Network IP&nbsp;</th>
+                <th class="networktable-broadcastaddr" custom-sort order="'broadcastaddr'" sort="sort">Broadcast IP&nbsp;</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr ng-repeat="item in items | orderBy:sort.sortingOrder:sort.reverse:ipComparator | searchFilter:{term:networksearch, type:filterList} | filter: networksearch">
+                <td>{{item.id}}</td>
+                <td>{{item.netmask}}</td>
+                <td>{{item.routersid}}</td>
+                <td>{{item.numrouters}}</td>
+                <td>{{item.originator}}</td>
+                <td>{{item.firstaddr}}</td>
+                <td>{{item.lastaddr}}</td>
+                <td>{{item.networkaddr}}</td>
+                <td>{{item.broadcastaddr}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    </div>
+</div>
