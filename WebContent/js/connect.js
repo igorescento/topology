@@ -1,8 +1,10 @@
+'use strict';
+
 var connectModule = angular.module('connect', []);
 
 connectModule.factory('AuthenticationService',
-    ['$http', '$rootScope', '$timeout',
-    function ($http, $rootScope, $timeout, routerData) {
+    ['$http', '$rootScope', '$timeout', '$location',
+    function ($http, $rootScope, $timeout, $location) {
         var service = {};
 
         service.Login = function (ipaddress, username, password, callback) {
@@ -31,6 +33,32 @@ connectModule.factory('AuthenticationService',
               $http(config)
                   .then(function (response) {
                       callback(response);
+                      var configDetails = {
+                          method: 'POST',
+                          url: 'http://localhost:8080/topology/api/mikrotik/details',
+                          headers: {
+                              'Content-Type': 'application/json'
+                          },
+                          data: {
+                              'ipaddress': ipaddress, 'username': username, 'password': password === undefined ? "" : password
+                          }
+                      };
+                      $http(configDetails)
+                          .then(function (response) {
+                            $rootScope.connectionDetails.routerid = response.data;
+                            /* enable buttons */
+                            for(var key in mappings){
+                              Array.from(document.getElementsByClassName(key)).forEach(button => {
+                                button.disabled = false;
+                              });
+                            }
+
+                            $location.path('/topology');
+                          })
+                          .catch(function(error){
+                              console.log("ERROR RETRIEVING DATA: " + error);
+                          });
+
                   })
                   .catch(function(error){
                     callback(error);
@@ -48,20 +76,15 @@ connectModule.controller('connectionController',
             $scope.dataLoading = true;
             AuthenticationService.Login($scope.ipaddress, $scope.username, $scope.password, function(response) {
                 if(parseInt(response.status) === 200) {
-                    $location.path('/topology');
+                    //$location.path('/topology');
 
                     /*setting root scope */
                     $rootScope.isDataLoaded = true;
-
-                    /* enable buttons */
-                    for(var key in mappings){
-                      Array.from(document.getElementsByClassName(key)).forEach(button => {
-                        button.disabled = false;
-                      });
-                    }
+                    $rootScope.connectionDetails = { ipaddress: $scope.ipaddress, time: (new Date()).toLocaleString(), routerid: null };
                 } else {
                     $scope.error = "Error " + response.status + ": " + (response.data === null ? "Connection Error." : response.data);
                     $scope.dataLoading = false;
+                    $rootScope.connectedRouter = null;
                 }
             });
         };

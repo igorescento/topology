@@ -107,7 +107,7 @@
             defaultStyle: true,
             animationAtStart: true,
             scaleExtent: [0.25, 5],
-            charge: -130,
+            charge: -200, //-130 originally
             linkDistance: 50,
             linkStrength: 0.2,
             friction: 0.9,  // d3 default
@@ -420,7 +420,7 @@
                                          }
                                          return baseClass + " " + addClass;
                                      }
-                                     return baseClass;
+                                     return baseClass +  " " + "color-" + node.color;
                                  })
                                  .attr("r", opts.circleRadius)
                                  .attr("id", function(d, i) { return d.type })
@@ -502,6 +502,7 @@
                 opts.onLoad(url, opts);
 
                 force.on("tick", function() {
+
                     link.attr("x1", function(d) {
                         return d.source.x;
                     })
@@ -582,6 +583,6 @@
         }
      };
      function dragstart(d) {
-  d3.select(this).classed("fixed", d.fixed = true);
-};
+        d3.select(this).classed("fixed", d.fixed = true);
+     }
 })();

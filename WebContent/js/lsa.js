@@ -41,6 +41,7 @@ lsa.controller('lsaController', function($rootScope, $scope, $http, $location) {
     $http(config)
         .then(function (response) {
             $scope.items = response.data;
+            $scope.totalRows = response.data.length;
         })
         .catch(function(error){
             console.log("ERROR RETRIEVING LSA DATA: " + error);

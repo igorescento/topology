@@ -6,6 +6,9 @@ import ie.nuigalway.topology.api.resources.IPv4Converter;
 import ie.nuigalway.topology.domain.entities.RouterLsa;
 
 public class RouterLsaModel {
+	
+	@JsonProperty
+	private Integer seq;
 
 	@JsonProperty
 	private Long id;
@@ -34,6 +37,14 @@ public class RouterLsaModel {
 		this.bodyid = rl.getBodyid();
 		this.data = rl.getData();
 		this.metric = rl.getMetric();
+	}
+	
+	public Integer getSeq() {
+		return seq;
+	}
+
+	public void setSeq(Integer seq) {
+		this.seq = seq;
 	}
 
 	public String getLinktype() {

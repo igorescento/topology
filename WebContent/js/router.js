@@ -39,6 +39,7 @@ router.controller('routersController', function($rootScope, $scope, $http, $loca
     $http(config)
         .then(function (response) {
             $scope.items = response.data;
+            $scope.totalRows = response.data.length;
         })
         .catch(function(error){
             console.log("ERROR RETRIEVING ROUTER DATA: " + error);

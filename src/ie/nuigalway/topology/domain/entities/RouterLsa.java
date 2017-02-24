@@ -2,6 +2,8 @@ package ie.nuigalway.topology.domain.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -9,8 +11,12 @@ import javax.persistence.Table;
 @Table(name = "routerlsa")
 public class RouterLsa {
 	
-	@Id
-	@Column(name="data", nullable = false, unique = true)
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(name="seq", nullable=false, unique=true)
+	protected Integer seq;
+	
+	@Column(name="data", nullable = false)
 	private Long data;
 	
 	@Column(name = "type")

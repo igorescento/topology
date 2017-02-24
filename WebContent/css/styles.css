@@ -21,12 +21,6 @@ body {
     text-anchor: middle;
 }
 
-.njg-overlay{
-    display: none;
-    position: absolute;
-    z-index: 11;
-}
-
 .njg-close{
     cursor: pointer;
     position: absolute;
@@ -34,12 +28,6 @@ body {
     top: 10px;
 }
 .njg-close:before { content: "\2716"; }
-
-.njg-metadata{
-    display: none;
-    position: absolute;
-    z-index: 12;
-}
 
 .njg-node{ cursor: pointer }
 .njg-link{ cursor: pointer }
@@ -72,24 +60,28 @@ body {
 }
 
 .njg-overlay{
+    display: none;
+    position: absolute;
+    z-index: 11;
     background: #fbfbfb;
     border-radius: 2px;
     border: 1px solid #ccc;
     color: #6d6357;
     font-family: Arial, sans-serif;
-    font-family: sans-serif;
     font-size: 14px;
     line-height: 20px;
     height: auto;
     min-width: 150px;
     padding: 0 15px;
-    right: 10px;
-    top: 100px;
+    right: 5px;
+    top: 5px;
     width: 200px;
-    left: calc(90% - 200px);
 }
 
 .njg-metadata{
+    display: none;
+    position: absolute;
+    z-index: 12;
     background: #fbfbfb;
     border-radius: 2px;
     border: 1px solid #ccc;
@@ -103,7 +95,7 @@ body {
     max-width: 200px;
     min-width: 150px;
     padding: 0 10px;
-    top: 100px;
+    top: 5px;
     width: auto;
 }
 
@@ -145,7 +137,72 @@ body{ overflow: hidden }
     stroke-opacity: 0.7 !important
 }
 
+.color-green {
+  fill: #2E8B57;
+}
+
 /* topology.htm styles */
+
+#graph {
+  height: 70%;
+  width: 95%;
+  margin-left: 2.5%;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  outline: 2px solid #318ec5;
+}
+
+.topology {
+
+}
+
+.topology-header {
+    height: 50px;
+    display: inline-flex;
+    width: 100%;
+    margin: 0px 20px 0px 25px;
+}
+
+.topology-header-title {
+    width: 66%;
+}
+
+.button-tree {
+  position: absolute;
+  right: 0px;
+  border-radius: 4px;
+  padding: 3px 7px;
+  background: #318ec5;
+  color: white;
+  border: 0;
+  height: 30px;
+  margin: 15px 0px 0px 0px;
+}
+
+.topology-header-filter {
+    width: 300px;
+    height: 50px;
+    margin: 5px 1.5% 5px 1.5%;
+    border-radius: 4px;
+    position: absolute;
+    right: 10px;
+}
+
+input#topologysearch {
+    display: inline-flex;
+    height: 24px;
+    margin-top: 3px;
+    width: 160px;
+}
+
+select#topologyselect {
+    height: 24px;
+    margin-left: 28px;
+    margin-top: 3px;
+    width: 100px;
+    padding: 0;
+}
+
 #legend{
     position: relative;
     display: flex;
@@ -172,23 +229,11 @@ body{ overflow: hidden }
     border-bottom-width: 6px;
     border-bottom-style: solid;
 }
-#legend .node{ background-color: #3182bd }
-#legend .gateway{ background-color: #ff8000 }
-#legend .wireless{ border-color: #669999 }		/* light green */
-#legend .wireless_weak{ border-color: #ccccff }		/* light grey */
-#legend .ethernet{ border-color: #00ff00 }		/* glowing green */
-#legend .fiber{ border-color: #1f77b4 }
-#legend .vpn{ border-color: purple }
+#legend .router{ background-color: #3182bd }
+#legend .switch{ background-color: #ff8000 }
+#legend .network{ border-color: #999 }
 
-#graph {
-  height: 77%;
-  width: 95%;
-  margin-left: 2.5%;
-  margin-top: 1%;
-  margin-bottom: 1%;
-  outline: 2px solid #318ec5;
-}
-
+/* header.htm styles */
 .header {
   display: inline-flex;
   width: 100%;
@@ -322,15 +367,15 @@ body{ overflow: hidden }
     height: 30px;
     display: inline-flex;
     width: 100%;
-    margin: 0px 30px 0px 30px;
+    margin: 0px 20px 0px 20px;
 }
 
 .lsa-header-title {
-    width: 50%;
+    width: 66%;
 }
 
 .lsa-header-filter {
-    width: 400px;
+    width: 300px;
     height: 30px;
     margin: 5px 10px 5px 10px;
     border-radius: 4px;
@@ -361,14 +406,14 @@ input#lsasearch {
     display: inline-flex;
     height: 24px;
     margin-top: 3px;
-    width: 240px;
+    width: 160px;
 }
 
 select#lsaselect {
     height: 24px;
     margin-left: 28px;
     margin-top: 3px;
-    width: 120px;
+    width: 100px;
     padding: 0;
 }
 
@@ -427,15 +472,15 @@ table#lsatable {
     height: 30px;
     display: inline-flex;
     width: 100%;
-    margin: 0px 30px 0px 30px;
+    margin: 0px 20px 0px 20px;
 }
 
 .router-header-title {
-    width: 50%;
+    width: 66%;
 }
 
 .router-header-filter {
-    width: 400px;
+    width: 300px;
     height: 30px;
     margin: 5px 10px 5px 10px;
     border-radius: 4px;
@@ -466,14 +511,14 @@ input#routersearch {
     display: inline-flex;
     height: 24px;
     margin-top: 3px;
-    width: 240px;
+    width: 160px;
 }
 
 select#routerselect {
     height: 24px;
     margin-left: 28px;
     margin-top: 3px;
-    width: 120px;
+    width: 100px;
     padding: 0;
 }
 
@@ -497,15 +542,15 @@ table#routertable {
     height: 30px;
     display: inline-flex;
     width: 100%;
-    margin: 0px 30px 0px 30px;
+    margin: 0px 20px 0px 20px;
 }
 
 .network-header-title {
-    width: 50%;
+    width: 66%;
 }
 
 .network-header-filter {
-    width: 400px;
+    width: 300px;
     height: 30px;
     margin: 5px 10px 5px 10px;
     border-radius: 4px;
@@ -536,14 +581,14 @@ input#networksearch {
     display: inline-flex;
     height: 24px;
     margin-top: 3px;
-    width: 240px;
+    width: 160px;
 }
 
 select#networkselect {
     height: 24px;
     margin-left: 28px;
     margin-top: 3px;
-    width: 120px;
+    width: 100px;
     padding: 0;
 }
 

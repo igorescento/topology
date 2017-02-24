@@ -1,14 +1,31 @@
 <div class="topology">
+  <div class=topology-header ng-controller="SwitchView">
+        <div class=topology-header-title>
+          <h4>Network Topology - {{header}}</h4>
+          <h5>Router ID: {{connectionDetails.routerid == null ? "fetching data..." : connectionDetails.routerid}}, IP Address: {{connectionDetails.ipaddress}}, Time: {{connectionDetails.time}}</h5>
+        </div>
+
+        <div class="topology-header-filter">
+          <button class="button-tree" ng-click="SwitchView($event)"><i class="icon icon-topology"></i>{{title}}</button>
+        </div>
+        <!--<div class="topology-header-filter">
+          <form>
+            <span class="topology-header-filter-left"><i class="topology-header-filter-icon"></i></span>
+            <select ng-model="filterList" id="lsaselect">
+
+            </select>
+            <input type="text" class="topology-header-filter-input" id="topologysearch" placeholder="Search" ng-model="topologysearch">
+          </form>
+        </div>
+         -->
+  </div>
+
   <div id="graph"></div>
 
   <div id="legend">
     <p><b>Legend:</b></p>
-    <p><span class="circle node">&nbsp;</span> Router</p>
-    <p><span class="circle gateway">&nbsp;</span> Switch</p>
-    <p><span class="link wireless">&nbsp;</span> Link / Network</p>
-    <p><span class="link wireless_weak">&nbsp;</span> weak wireless link</p>
-    <p><span class="link ethernet">&nbsp;</span> ethernet link</p>
-    <p><span class="link fiber">&nbsp;</span> fiber link</p>
-    <p><span class="link vpn">&nbsp;</span> vpn link</p>
+    <p><span class="circle router">&nbsp;</span> Router</p>
+    <p><span class="circle switch">&nbsp;</span> Switch</p>
+    <p><span class="link network">&nbsp;</span> Link / Network</p>
   </div>
 </div>

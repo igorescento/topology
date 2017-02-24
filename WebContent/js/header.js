@@ -15,7 +15,6 @@ headerModule.controller('TimeCtrl', function($scope, $interval) {
     $scope.clock = Date.now();
   };
 
-  //try { angular.module("ngCookies") } catch(err) { console.log("not present") }
   tick();
   $interval(tick, 1000);
 });

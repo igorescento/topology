@@ -44,6 +44,7 @@ network.controller('networksController', function($rootScope, $scope, $http, $lo
     $http(config)
         .then(function (response) {
             $scope.items = response.data;
+            $scope.totalRows = response.data.length;
         })
         .catch(function(error){
             console.log("ERROR RETRIEVING Net DATA: " + error);
