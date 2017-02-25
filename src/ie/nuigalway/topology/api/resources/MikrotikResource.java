@@ -48,12 +48,14 @@ public class MikrotikResource {
 	private LsaDAO lsaDAOHibernate;
 	private RouterLsaDAO routerLsaDAO;
 	private NetworkLsaDAO netLsaDAO;
+	private Timer timer;
 
 	{
 		this.sessionFactory = HibernateUtil.getSessionFactory();
 		this.lsaDAOHibernate = new LsaDAO(sessionFactory);
 		this.routerLsaDAO = new RouterLsaDAO(sessionFactory);
 		this.netLsaDAO = new NetworkLsaDAO(sessionFactory);
+		this.timer = new Timer();
 	}
 
 	/**
@@ -62,10 +64,9 @@ public class MikrotikResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response retrieveLsa(ConnDataModel data){
-
+		
 		//timer utility to execute the code after successful login and repeatedly fetch all the data
-		Timer t = new Timer();
-		System.out.println("TIMER RUNNNING " + t.toString());
+		System.out.println("TIMER RUNNNING " + timer.toString());
 		
 		//login to router and retrieve LSA table
 		try {
@@ -73,22 +74,28 @@ public class MikrotikResource {
 			ApiConnection con = ApiConnection.connect(data.getIpaddress());
 			con.login(data.getUsername(), data.getPassword());		
 
-			t.scheduleAtFixedRate(new TimerTask() {
+			timer.scheduleAtFixedRate(new TimerTask() {
 				public void run()
 				{
 					System.out.println("Timer runnning. " + data.getIpaddress() + " @ " + new Date());
+					
+					//deleting all tables
+					System.out.println("Deleting old table. New data inserted.");
+					deleteAllTables();
+					
 					updateLsaTable(con);
 					updateNetsTable();
 					updateRoutersTable();
 				}
 			}, 0, 60000);
+			
+			return Response.ok().build();
 
 		} catch (MikrotikApiException e) {
 			e.printStackTrace();
-			t.cancel();
+			timer.cancel();
 			return Response.status(500).entity(e.getMessage()).build();
 		}
-		return Response.ok().build();
 	}
 
 	/**
@@ -198,8 +205,6 @@ public class MikrotikResource {
 
 	/**
 	 * Remove LSA.
-	 * 
-	 * @param id
 	 */
 	@DELETE
 	@Path("{id}")
@@ -229,10 +234,6 @@ public class MikrotikResource {
 		try {
 
 			List<Map<String, String>> rs = con.execute("/routing/ospf/lsa/print");
-
-			//deleting all tables
-			System.out.println("Deleting old table. New data inserted.");
-			deleteAllTables();
 
 			for (Map<String,String> r : rs) {
 				LsaModel lsa = new LsaModel();

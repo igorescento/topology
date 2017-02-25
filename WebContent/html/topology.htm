@@ -1,12 +1,12 @@
 <div class="topology">
-  <div class=topology-header ng-controller="SwitchView">
-        <div class=topology-header-title>
+  <div class="topology-header">
+        <div class="topology-header-title">
           <h4>Network Topology - {{header}}</h4>
           <h5>Router ID: {{connectionDetails.routerid == null ? "fetching data..." : connectionDetails.routerid}}, IP Address: {{connectionDetails.ipaddress}}, Time: {{connectionDetails.time}}</h5>
         </div>
 
         <div class="topology-header-filter">
-          <button class="button-tree" ng-click="SwitchView($event)"><i class="icon icon-topology"></i>{{title}}</button>
+          <button class="button-tree" ng-click="SwitchView()"><i class="icon icon-topology"></i>{{buttonTitle}}</button>
         </div>
         <!--<div class="topology-header-filter">
           <form>
@@ -20,10 +20,24 @@
          -->
   </div>
 
-  <div id="graph"></div>
+  <div class="graph" id="graph" ng-style="{'background-color': background}">
+        <div ng-show="!responseReady" class="sk-cube-grid">
+            <div class="sk-cube sk-cube1"></div>
+            <div class="sk-cube sk-cube2"></div>
+            <div class="sk-cube sk-cube3"></div>
+            <div class="sk-cube sk-cube4"></div>
+            <div class="sk-cube sk-cube5"></div>
+            <div class="sk-cube sk-cube6"></div>
+            <div class="sk-cube sk-cube7"></div>
+            <div class="sk-cube sk-cube8"></div>
+            <div class="sk-cube sk-cube9"></div>
+            <p class="loading">Loading data...  </p>
+    </div>
+  </div>
 
-  <div id="legend">
+  <div class="legend" id="legend">
     <p><b>Legend:</b></p>
+    <p><span class="circle connected">&nbsp;</span> Source (Router)</p>
     <p><span class="circle router">&nbsp;</span> Router</p>
     <p><span class="circle switch">&nbsp;</span> Switch</p>
     <p><span class="link network">&nbsp;</span> Link / Network</p>

@@ -44,15 +44,15 @@ connectModule.factory('AuthenticationService',
                           }
                       };
                       $http(configDetails)
-                          .then(function (response) {
-                            $rootScope.connectionDetails.routerid = response.data;
+                          .then(function (res) {
+                            $rootScope.connectionDetails.routerid = res.data;
                             /* enable buttons */
                             for(var key in mappings){
                               Array.from(document.getElementsByClassName(key)).forEach(button => {
                                 button.disabled = false;
                               });
                             }
-
+                            
                             $location.path('/topology');
                           })
                           .catch(function(error){

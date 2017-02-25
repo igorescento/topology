@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.persistence.NoResultException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -17,7 +18,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 
 import ie.nuigalway.topology.api.exceptions.BasicException;
-import ie.nuigalway.topology.api.model.TopologyModel;
 import ie.nuigalway.topology.api.model.dijkstra.Dijkstra;
 import ie.nuigalway.topology.api.model.dijkstra.Edge;
 import ie.nuigalway.topology.api.model.dijkstra.Graph;
@@ -42,9 +42,9 @@ public class TopologyResource {
 	}
 
 	@GET
+	@Path("full")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Graph getCombined(){
-		List<TopologyModel> tmlist = new ArrayList<>();
 
 		try {
 			Collection<RouterLsa> rlsa = new ArrayList<>();
@@ -56,6 +56,8 @@ public class TopologyResource {
 
 			HashSet<Node> routers = new HashSet<>();
 			List<Edge> edges = new ArrayList<>();
+			
+			System.out.println("Routers SIZE: " + rlsa.size() + " NEts size: " + nlsa.size());
 
 			for(RouterLsa r: rlsa){
 
@@ -111,6 +113,7 @@ public class TopologyResource {
 			Graph netGraph = new Graph(l, edges);
 
 			sessionFactory.getCurrentSession().getTransaction().commit();
+			System.out.println("Pulling graph data");
 			return netGraph;
 
 		} catch (HibernateException e) {
