@@ -87,7 +87,7 @@ public class MikrotikResource {
 					updateNetsTable();
 					updateRoutersTable();
 				}
-			}, 0, 60000);
+			}, 0, 300000);
 			
 			return Response.ok().build();
 

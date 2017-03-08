@@ -17,7 +17,11 @@ public class Dijkstra {
 	private Set<Node> settled;
 	private Set<Node> unSettled;
 	private Map<Node, Node> predecessors;
-	private Map<Node, Integer> distance;
+	private HashMap<Node, Integer> distance;
+
+	public HashMap<Node, Integer> getDistance() {
+		return distance;
+	}
 
 	public Dijkstra(Graph graph) {
 
@@ -110,7 +114,7 @@ public class Dijkstra {
 				return edge.getMetric();
 			}
 		}
-		throw new RuntimeException("Runtime exception.");
+		throw new RuntimeException("Error retrieving the distance between nodes.");
 	}
 
 	/**

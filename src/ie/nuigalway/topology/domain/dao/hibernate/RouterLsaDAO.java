@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import ie.nuigalway.topology.domain.entities.RouterLsa;
@@ -29,6 +31,17 @@ public class RouterLsaDAO extends GenericHibernateDAOFilter<RouterLsa, Integer>{
 		@SuppressWarnings("unchecked")
 		List<RouterLsa> list = getSession()
 		.createCriteria(getPersistentClass()).add(Restrictions.eq("linktype", value)).list();
+
+		return list;
+	}
+	
+	public Collection<Long> findDistinctId() {
+		@SuppressWarnings("unchecked")
+		Collection<Long> list = getSession()
+		.createCriteria(getPersistentClass())
+			.setProjection(Projections.distinct(Projections.property("id")))
+			.addOrder(Order.asc("id"))
+			.list();
 
 		return list;
 	}

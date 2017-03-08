@@ -379,8 +379,10 @@
                                  .data(links)
                                  .enter().append("line")
                                  .attr("class", function (link) {
-                                     var baseClass = "njg-link",
-                                         addClass = null;
+                                     var baseClass = "njg-link ",
+                                         //add property to each link to know which nodes they connect
+                                         //addClass = null;
+                                        addClass = link.source.id.replace(/\./g, '-') + '_' + link.target.id.replace(/\./g, '-');
                                          value = link.properties && link.properties[opts.linkClassProperty];
                                      if (opts.linkClassProperty && value) {
                                          // if value is stirng use that as class
@@ -395,7 +397,7 @@
                                          }
                                          return baseClass + " " + addClass;
                                      }
-                                     return baseClass;
+                                     return baseClass + addClass;
                                  })
                                  .on("click", opts.onClickLink),
                     groups = panner.selectAll(".node")

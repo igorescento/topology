@@ -2,11 +2,14 @@ package ie.nuigalway.topology.api.resources;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-import javax.persistence.NoResultException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -41,6 +44,9 @@ public class TopologyResource {
 		this.netDAO = new NetworkLsaDAO(sessionFactory);
 	}
 
+	/**
+	 * Method to return full topology constructed from routers and networks tables
+	 */
 	@GET
 	@Path("full")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -56,9 +62,10 @@ public class TopologyResource {
 
 			HashSet<Node> routers = new HashSet<>();
 			List<Edge> edges = new ArrayList<>();
-			
-			System.out.println("Routers SIZE: " + rlsa.size() + " NEts size: " + nlsa.size());
 
+			System.out.println("Routers SIZE: " + rlsa.size() + " NETS size: " + nlsa.size());
+
+			//loop thru routers and check which network it belongs to
 			for(RouterLsa r: rlsa){
 
 				Node rout = new Node(IPv4Converter.longToIpv4(r.getId()), IPv4Converter.longToIpv4(r.getId()), r.getType());
@@ -87,20 +94,21 @@ public class TopologyResource {
 							Node swtch = new Node(IPv4Converter.longToIpv4(n.getNetworkaddr()), IPv4Converter.longToIpv4(n.getNetworkaddr()), "switch");
 							routers.add(swtch);
 
+							int num = n.getNumrouters() - 1;
 							for(String router : n.getRoutersid().split(",")){
 								if(r.getId() != Long.parseLong(router.trim())){
 									edges.add(
 											new Edge(IPv4Converter.longToIpv4(n.getNetworkaddr()),
 													new Node(IPv4Converter.longToIpv4(r.getId()), IPv4Converter.longToIpv4(r.getId()), r.getType()), 
 													swtch,
-													r.getMetric()
+													r.getMetric()/num
 													)
 											);
 									edges.add(
 											new Edge(IPv4Converter.longToIpv4(n.getNetworkaddr()),
 													swtch,
 													new Node(IPv4Converter.longToIpv4(r.getId()), IPv4Converter.longToIpv4(r.getId()), r.getType()),
-													r.getMetric()
+													r.getMetric()/num
 													)
 											);
 								}
@@ -130,7 +138,6 @@ public class TopologyResource {
 
 	@GET
 	@Path("synctree/{id}")
-
 	@Produces(MediaType.APPLICATION_JSON)
 	public Graph getSyncTree(@PathParam("id") String id){
 
@@ -157,18 +164,47 @@ public class TopologyResource {
 	@GET
 	@Path("shortestpath/{from}/{to}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public void getShortestPath(@PathParam("from") String from, @PathParam("to") String to){
+	public List<HashMap<String, Integer>> getShortestPath(@PathParam("from") String from, @PathParam("to") String to){
+
+		//List<String> listNodes = new ArrayList<>();
+		HashMap<Node, Integer> distances = new HashMap<>();
+		HashMap<String, Integer> d = new HashMap<>();
+		HashMap<String, Integer> hops = new HashMap<>();
+		List<HashMap<String, Integer>> result = new ArrayList<>();
 
 		Node n = new Node(from, from, "router");
 		Node n2 = new Node(to, to, "router");
+		Integer hopNum = 0;
 
-		Dijkstra algo = new Dijkstra(getCombined());
-		algo.run(n);
-		LinkedList<Node> path = algo.getPath(n2);
+		try {
+			Dijkstra algo = new Dijkstra(getCombined());
+			algo.run(n);
+			distances = algo.getDistance();
 
-		for (Node no : path) {
-			System.out.println(no.getName());
+			for (HashMap.Entry<Node, Integer> node : distances.entrySet()) {
+				d.put(node.getKey().getId(), node.getValue());
+
+			}
+
+			result.add(d);
+
+			LinkedList<Node> path = algo.getPath(n2);
+
+			/*for (Node node : path) {
+				listNodes.add(node.getName());
+			}*/
+
+			for (Node node : path) {
+				hops.put(node.getName(), hopNum);
+				hopNum++;
+			}
+
+			result.add(hops);
 		}
-
+		catch(NullPointerException e){
+			//e.printStackTrace();
+			System.out.println("Null pointer due to overlap with database update.");
+		}
+		return result;
 	}
 }

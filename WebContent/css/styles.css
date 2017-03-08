@@ -169,6 +169,31 @@ body{ overflow: hidden }
     width: 66%;
 }
 
+.sync-tree {
+    background: #318ec5;
+    padding: 3px 7px;
+    border: 0px;
+    border-radius: 4px;
+    margin: 15px 0px 0px 0px;
+    height: 25px;
+    width: 300px;
+    }
+
+select#routerstopology {
+    height: 20px;
+    margin-left: 0px;
+    margin-top: 3px;
+    width: 130px;
+    padding: 0;
+}
+
+input#distance {
+    display: inline-flex;
+    height: 20px;
+    margin-top: 3px;
+    width: 32px;
+}
+
 .button-tree {
   position: absolute;
   right: 0px;
@@ -182,12 +207,13 @@ body{ overflow: hidden }
 }
 
 .topology-header-filter {
-    width: 300px;
+    width: 450px;
     height: 50px;
     margin: 5px 1.5% 5px 1.5%;
     border-radius: 4px;
     position: absolute;
     right: 10px;
+    display: inline-flex;
 }
 
 input#topologysearch {

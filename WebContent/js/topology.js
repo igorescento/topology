@@ -7,21 +7,7 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
     $scope.buttonTitle = "Show Sync Tree";
     $scope.header = "Complete";
     $scope.responseReady = false;
-
-    $scope.SwitchView = function () {
-        $scope.buttonTitle = $scope.buttonTitle === "Show Sync Tree" ? "Show Topology" : "Show Sync Tree";
-        $scope.header = $scope.header === "Complete" ? "Sync Tree" : "Complete";
-
-        if($scope.buttonTitle === "Show Sync Tree"){
-          console.log("show full topology here");
-        }
-
-        else {
-            console.log("Displaying sync tree, stopping the timer.");
-            $interval.cancel($scope.Timer);
-            getSyncTree();
-        }
-    }
+    $scope.topology = true;
 
     /* load JSON with demo data */
     if($rootScope.isDemo){
@@ -37,28 +23,93 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
                     defaultStyle: false,
                     labelDy: "-1.8em"
                 });
+
+                //TESTING
+                console.log(d3.selectAll("line"));
+                var el = document.getElementsByClassName('10-255-255-3_10-255-255-4');//.style('stroke', '#f90808');
+                console.log(el[0]);
+                el[0].style.stroke = '#f90808';
             });
     }
 
     /* live data */
     else {
 
+        $scope.SwitchView = function () {
+            $scope.buttonTitle = $scope.buttonTitle === "Show Sync Tree" ? "Show Topology" : "Show Sync Tree";
+            $scope.header = $scope.header === "Complete" ? "Sync Tree" : "Complete";
+
+            //switch view active - loading topology
+            if($scope.buttonTitle === "Show Sync Tree"){
+                $scope.topology = true;
+                getFullNetwork();
+
+                // call get method every n seconds
+                $scope.Timer = $interval(function() {
+                    console.log(new Date());
+                      $rootScope.connectionDetails.time = new Date().toLocaleString();
+                      getFullNetwork();
+                }, 25000);
+            }
+
+            else {
+                console.log("Displaying sync tree, stopping the timer.");
+                $scope.topology = false;
+                $interval.cancel($scope.Timer);
+                getSyncTree($rootScope.connectionDetails.routerid);
+
+                $scope.changedSource = function(rootNode){
+                    if(rootNode !== ''){
+                        $scope.selectedRouter = rootNode;
+                        getSyncTree($scope.selectedRouter);
+                    }
+                }
+
+                //highlight shortest path when destination selected
+                $scope.changedDestination = function(destination){
+                    if(destination !== '' && $scope.selectedRouter){
+                        if(destination === $scope.selectedRouter){
+                            console.log("Same router selected.");
+                            var links = d3.selectAll(".njg-link")[0];
+                            for(var j = 0; j < links.length; j++) {
+                                links[j].style.stroke = "#999";
+                            }
+                            $scope.distance = 0;
+                        }
+                        else {
+                            //clear each time destination is changed
+                            var links = d3.selectAll(".njg-link")[0];
+                            for(var j = 0; j < links.length; j++) {
+                                links[j].style.stroke = "#999";
+                            }
+                            getShortestPath($scope.selectedRouter, destination);
+                        }
+                    }
+                }
+            }
+        }
+
+        //same approach as in switch view where data is polled initially every n seconds
         console.log("Displaying full network.");
         //poll data very often after table deletion
         $interval(function(){
           if(!$scope.responseReady){
-            getFullNetwork();
-            console.log("Need show loading screen");
-            console.log($scope.responseReady);
+              getRouters();
+              if($scope.buttonTitle === "Show Sync Tree"){
+                  getFullNetwork();
+                  console.log("WAITING ON FULL NETWORK 500ms.");
+              }
+              else {
+                  getSyncTree($rootScope.connectionDetails.routerid);
+                  console.log("WAITING ON SYNC TREE 500ms.");
+              }
           }
-        }, 500);
+        }, 1000);
 
         // call get method every n seconds
         $scope.Timer = $interval(function() {
-            console.log(new Date());
-              $rootScope.connectionDetails.time = new Date().toLocaleString();
-              getFullNetwork();
-        }, 3000);
+            getFullNetwork();
+        }, 25000);
 
     }
 
@@ -85,11 +136,23 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
                     if(d3.select("svg")){
                         d3.select("svg").remove();
                         d3.select(".njg-metadata").remove();
+                        d3.select(".njg-overlay").remove();
                     }
 
+                    $rootScope.connectionDetails.time = new Date().toLocaleString();
                     processData(response.data, $rootScope.connectionDetails.routerid);
                     $scope.responseReady = true;
                     $scope.background = "#ffffff";
+                }
+                else {
+                  console.log("empty response due to possible overlap in execution time on the backend");
+                  if(d3.select("svg")){
+                      d3.select("svg").remove();
+                      d3.select(".njg-metadata").remove();
+                      d3.select(".njg-overlay").remove();
+                  }
+                  $scope.responseReady = false;
+                  $scope.background = "#fffff0";
                 }
             })
             .catch(function(error){
@@ -99,20 +162,101 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
     };
 
     /* Method to get the sync tree */
-    function getSyncTree(){
+    function getSyncTree(routerId){
 
         var config = {
             method: 'GET',
-            url: 'http://localhost:8080/topology/api/topology/synctree/'+$rootScope.connectionDetails.routerid
+            url: 'http://localhost:8080/topology/api/topology/synctree/' + routerId
         };
 
         $http(config)
             .then(function (response) {
-              console.log(response);
-              processData(response.data, $rootScope.connectionDetails.routerid);
+              /* remove the svg element and create new graph */
+              if(response.data.nodes.length !== 0 || response.data.edges.length !== 0){
+                  /* remove the svg element and create new graph */
+                  if(d3.select("svg")){
+                      d3.select("svg").remove();
+                      d3.select(".njg-metadata").remove();
+                  }
+
+                  $rootScope.connectionDetails.time = new Date().toLocaleString();
+                  processData(response.data, routerId);
+                  $scope.responseReady = true;
+                  $scope.background = "#ffffff";
+              }
+              else {
+                console.log("empty response due to possible overlap in execution time on the backend");
+                if(d3.select("svg")){
+                    d3.select("svg").remove();
+                    d3.select(".njg-metadata").remove();
+                }
+
+                $scope.responseReady = false;
+                $scope.background = "#fffff0";
+              }
             })
             .catch(function(error){
                 console.log("Error retrieving sync tree: " + error);
+            });
+
+    };
+
+    /* Method to get the routers for selector*/
+    function getRouters(){
+
+        var config = {
+            method: 'GET',
+            url: 'http://localhost:8080/topology/api/type/distinctrouter'
+        };
+        $http(config)
+            .then(function (response) {
+                $scope.routers = response.data;
+            })
+            .catch(function(error){
+                console.log("ERROR RETRIEVING ROUTER DATA: " + error);
+            });
+
+    };
+
+    /* Method to get the shortest path between two nodes*/
+    function getShortestPath(from, to){
+
+        var config = {
+            method: 'GET',
+            url: 'http://localhost:8080/topology/api/topology/shortestpath/' + from + '/' + to
+        };
+        $http(config)
+            .then(function (response) {
+                var resp, routers, distances;
+
+                if(Object.keys(response.data[1]).length){
+                  resp = response.data[1];
+
+                  routers = Object.keys(resp).sort(function(a,b){ return resp[a]-resp[b] });
+
+                  distances = response.data[0];
+                  $scope.distance = distances[to];
+
+                  for(var i = 0; i < routers.length - 1; i++){
+                      var linkA = routers[i].replace(/\./g, '-') + '_' + routers[i+1].replace(/\./g, '-');
+                      var linkB = routers[i+1].replace(/\./g, '-') + '_' + routers[i].replace(/\./g, '-');
+
+                      var el = document.getElementsByClassName(linkA);
+                      var el2 = document.getElementsByClassName(linkB);
+                      if(el.length > 0) {
+                          el[0].style.stroke = '#f90808';
+                      }
+                      if(el2.length > 0){
+                          el2[0].style.stroke = '#f90808';
+                      }
+                  }
+                }
+                else {
+                  console.log("Unsuccesfull. Updating tables.")
+                }
+            })
+            .catch(function(error){
+                console.log("ERROR RETRIEVING SHORTEST PATH DATA: " + error);
             });
 
     };
@@ -159,7 +303,6 @@ function processData(data, rId){
             }
         }
     }
-
     topology.nodes = newNodes;
 
     /* remove duplicate routes, connections */

@@ -2,6 +2,7 @@ package ie.nuigalway.topology.api.resources;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -56,6 +57,38 @@ public class TypeResource {
 			sessionFactory.getCurrentSession().getTransaction().commit();
 			
 			return routModel;
+
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			sessionFactory.getCurrentSession().getTransaction().rollback();
+			throw new BasicException(Response.Status.INTERNAL_SERVER_ERROR,
+					"Internal problem", "Error occured while retrieving data. " + e.getMessage());
+		}
+	}
+	
+	/**
+	 * Get all LSA router instances and populate routers table.
+	 */
+	@GET
+	@Path("/distinctrouter")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<String> getAllUniqueRouters() {
+
+		try {
+			sessionFactory.getCurrentSession().getTransaction().begin();
+
+			Collection<Long> routLsaAll = new ArrayList<>();
+			List<String> routers = new ArrayList<>();
+			
+			routLsaAll = routerDAO.findDistinctId();
+			
+			for(Long l : routLsaAll){
+				routers.add(IPv4Converter.longToIpv4(l));
+			}
+			
+			sessionFactory.getCurrentSession().getTransaction().commit();
+			
+			return routers;
 
 		} catch (HibernateException e) {
 			e.printStackTrace();
