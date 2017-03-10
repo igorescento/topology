@@ -72,6 +72,16 @@ connectModule.factory('AuthenticationService',
 connectModule.controller('connectionController',
     ['$scope', '$rootScope', '$location', 'AuthenticationService',
     function ($scope, $rootScope, $location, AuthenticationService) {
+
+        if(!$rootScope.isDataLoaded){
+            /* disable buttons */
+            for(var key in mappings){
+              Array.from(document.getElementsByClassName(key)).forEach(button => {
+                button.disabled = true;
+              });
+            };
+        }
+
         $scope.login = function () {
             $scope.dataLoading = true;
             AuthenticationService.Login($scope.ipaddress, $scope.username, $scope.password, function(response) {

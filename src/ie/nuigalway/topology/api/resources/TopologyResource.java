@@ -25,8 +25,10 @@ import ie.nuigalway.topology.api.model.dijkstra.Dijkstra;
 import ie.nuigalway.topology.api.model.dijkstra.Edge;
 import ie.nuigalway.topology.api.model.dijkstra.Graph;
 import ie.nuigalway.topology.api.model.dijkstra.Node;
+import ie.nuigalway.topology.domain.dao.hibernate.LsaDAO;
 import ie.nuigalway.topology.domain.dao.hibernate.NetworkLsaDAO;
 import ie.nuigalway.topology.domain.dao.hibernate.RouterLsaDAO;
+import ie.nuigalway.topology.domain.entities.Lsa;
 import ie.nuigalway.topology.domain.entities.NetworkLsa;
 import ie.nuigalway.topology.domain.entities.RouterLsa;
 import ie.nuigalway.topology.util.database.HibernateUtil;
@@ -37,11 +39,13 @@ public class TopologyResource {
 	private SessionFactory sessionFactory;
 	private RouterLsaDAO routerDAO;
 	private NetworkLsaDAO netDAO;
+	private LsaDAO lsaDAO;
 
 	{
 		this.sessionFactory = HibernateUtil.getSessionFactory();
 		this.routerDAO = new RouterLsaDAO(sessionFactory);
 		this.netDAO = new NetworkLsaDAO(sessionFactory);
+		this.lsaDAO = new LsaDAO(sessionFactory);
 	}
 
 	/**
@@ -55,10 +59,12 @@ public class TopologyResource {
 		try {
 			Collection<RouterLsa> rlsa = new ArrayList<>();
 			Collection<NetworkLsa> nlsa = new ArrayList<>();
+			Collection<Lsa> external = new ArrayList<>();
 
 			sessionFactory.getCurrentSession().getTransaction().begin();
 			rlsa = routerDAO.findAllLinkType("Transit");
 			nlsa = netDAO.findAll();
+			external = lsaDAO.findAllType("as-external");
 
 			HashSet<Node> routers = new HashSet<>();
 			List<Edge> edges = new ArrayList<>();
@@ -83,7 +89,7 @@ public class TopologyResource {
 											new Edge(IPv4Converter.longToIpv4(n.getNetworkaddr()),
 													new Node(IPv4Converter.longToIpv4(r.getId()), IPv4Converter.longToIpv4(r.getId()), r.getType()), 
 													new Node(IPv4Converter.longToIpv4(Long.parseLong(router.trim())), IPv4Converter.longToIpv4(Long.parseLong(router.trim())), "router"),
-													r.getMetric()
+													r.getMetric(), "internal"
 													)
 											);
 								}
@@ -101,14 +107,14 @@ public class TopologyResource {
 											new Edge(IPv4Converter.longToIpv4(n.getNetworkaddr()),
 													new Node(IPv4Converter.longToIpv4(r.getId()), IPv4Converter.longToIpv4(r.getId()), r.getType()), 
 													swtch,
-													r.getMetric()/num
+													r.getMetric()/num, "internal"
 													)
 											);
 									edges.add(
 											new Edge(IPv4Converter.longToIpv4(n.getNetworkaddr()),
 													swtch,
 													new Node(IPv4Converter.longToIpv4(r.getId()), IPv4Converter.longToIpv4(r.getId()), r.getType()),
-													r.getMetric()/num
+													r.getMetric()/num, "internal"
 													)
 											);
 								}
@@ -117,6 +123,34 @@ public class TopologyResource {
 					}
 				}
 			}
+			
+			//working with external routes
+			List<Node> additional = new ArrayList<>();
+			
+			for(Node r : routers){
+				for(Lsa e : external) {
+					if(r.getId().equals(IPv4Converter.longToIpv4(e.getIdTypePk().getId())) && e.getIdTypePk().getId() != e.getOriginator()){
+						System.out.println("EXTERNAL ROUTER: " + r.getId());
+		
+						//create external node with an edge
+						int metric = 0;
+						Node ext = new Node("EXT_" + r.getId(), "EXT_" + r.getId(), "external");
+		
+						String [] text = e.getBody().split("\\r?\\n");
+						for(String s : text){
+							if(s.contains("metric")){
+								metric = Integer.parseInt(s.split("=")[1].trim());
+							}
+						}
+					
+						Edge extE = new Edge("External_Route", r, ext, metric, "external");
+						additional.add(ext);
+						edges.add(extE);						
+					}
+				}
+			}
+			routers.addAll(additional);
+			
 			List<Node> l = new ArrayList<>(routers);
 			Graph netGraph = new Graph(l, edges);
 

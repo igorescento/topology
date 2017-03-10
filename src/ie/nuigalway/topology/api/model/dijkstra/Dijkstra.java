@@ -14,9 +14,9 @@ public class Dijkstra {
 
 	private List<Node> nodes;
 	private List<Edge> edges;
-	private Set<Node> settled;
-	private Set<Node> unSettled;
-	private Map<Node, Node> predecessors;
+	private Set<Node> resolved;
+	private Set<Node> unresolved;
+	private Map<Node, Node> prior;
 	private HashMap<Node, Integer> distance;
 
 	public HashMap<Node, Integer> getDistance() {
@@ -33,16 +33,16 @@ public class Dijkstra {
 	 * Method to run / execute Dijkstra algorithm
 	 */
 	public void run(Node source) {
-		settled = new HashSet<Node>();
-		unSettled = new HashSet<Node>();
+		resolved = new HashSet<Node>();
+		unresolved = new HashSet<Node>();
 		distance = new HashMap<Node, Integer>();
-		predecessors = new HashMap<Node, Node>();
+		prior = new HashMap<Node, Node>();
 		distance.put(source, 0);
-		unSettled.add(source);
-		while (unSettled.size() > 0) {
-			Node node = getMin(unSettled);
-			settled.add(node);
-			unSettled.remove(node);
+		unresolved.add(source);
+		while (unresolved.size() > 0) {
+			Node node = getMin(unresolved);
+			resolved.add(node);
+			unresolved.remove(node);
 			findMinDistances(node);
 		}
 	}
@@ -61,7 +61,7 @@ public class Dijkstra {
 		//iterate over nodes and check if all present in reduced graph
 		while (iter.hasNext()) {
 			Node n = iter.next();
-			if(!predecessors.containsKey(n) && !predecessors.containsValue(n)){
+			if(!prior.containsKey(n) && !prior.containsValue(n)){
 				iter.remove();
 			}
 		}
@@ -70,8 +70,8 @@ public class Dijkstra {
 		while (iterV.hasNext()) {
 			Edge e = iterV.next();
 
-			if(predecessors.get(e.getSource()) != null){
-				if(predecessors.get(e.getSource()).equals(e.getDestination()) || (predecessors.get(e.getDestination()).equals(e.getSource()))) {
+			if(prior.get(e.getSource()) != null){
+				if(prior.get(e.getSource()).equals(e.getDestination()) || (prior.get(e.getDestination()).equals(e.getSource()))) {
 
 				}
 				else {
@@ -98,8 +98,8 @@ public class Dijkstra {
 					+ getDistance(n, dest)) {
 				distance.put(dest, getShortestDistance(n)
 						+ getDistance(n, dest));
-				predecessors.put(dest, n);
-				unSettled.add(dest);
+				prior.put(dest, n);
+				unresolved.add(dest);
 			}
 		}
 	}
@@ -154,7 +154,7 @@ public class Dijkstra {
 	 * Method to check if node is settled
 	 */
 	private boolean isSettled(Node n) {
-		return settled.contains(n);
+		return resolved.contains(n);
 	}
 
 	/**
@@ -176,12 +176,12 @@ public class Dijkstra {
 		LinkedList<Node> path = new LinkedList<Node>();
 		Node inBetween = t;
 		// if path exists
-		if (predecessors.get(inBetween) == null) {
+		if (prior.get(inBetween) == null) {
 			return null;
 		}
 		path.add(inBetween);
-		while (predecessors.get(inBetween) != null) {
-			inBetween = predecessors.get(inBetween);
+		while (prior.get(inBetween) != null) {
+			inBetween = prior.get(inBetween);
 			path.add(inBetween);
 		}
 		// reverse to get the correct order

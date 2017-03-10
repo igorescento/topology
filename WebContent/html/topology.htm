@@ -5,11 +5,11 @@
           <h5>Router ID: {{connectionDetails.routerid == null ? "fetching data..." : connectionDetails.routerid}}, IP Address: {{connectionDetails.ipaddress}}, Time: {{connectionDetails.time}}</h5>
         </div>
 
-        <div class="topology-header-filter">
+        <div class="topology-header-filter" ng-show="responseReady">
 
           <div class="sync-tree" ng-show="!topology">
             <select id="routerstopology" ng-model="routerfilter" ng-change="changedSource(routerfilter)">
-              <option value="">Select a router</option>
+              <!--<option value="">Select a router</option> -->
               <option ng-repeat="data in routers" value="{{data}}">{{data}}</option>
             </select>
             <select id="routerstopology" ng-model="destinationFilter" ng-change="changedDestination(destinationFilter)">
@@ -36,7 +36,8 @@
             <div class="sk-cube sk-cube8"></div>
             <div class="sk-cube sk-cube9"></div>
             <p class="loading">Loading data...  </p>
-    </div>
+        </div>
+        <button class="button-external" ng-show="responseReady" ng-click="ShowExternal()">{{externalTitle}}</button>
   </div>
 
   <div class="legend" id="legend">
@@ -44,6 +45,8 @@
     <p><span class="circle connected">&nbsp;</span> Source (Router)</p>
     <p><span class="circle router">&nbsp;</span> Router</p>
     <p><span class="circle switch">&nbsp;</span> Switch</p>
+    <p><span class="circle ext">&nbsp;</span> External Route</p>
     <p><span class="link network">&nbsp;</span> Link / Network</p>
+    <p><span class="link synctree">&nbsp;</span> Shortest Path</p>
   </div>
 </div>

@@ -29,9 +29,6 @@ body {
 }
 .njg-close:before { content: "\2716"; }
 
-.njg-node{ cursor: pointer }
-.njg-link{ cursor: pointer }
-
 #njg-select-group {
     text-align: center;
     box-shadow: 0 0 10px #ccc;
@@ -131,7 +128,6 @@ body{ overflow: hidden }
 .vpn{ stroke: purple; }
 .njg-node{ fill: #3182bd }
 .njg-node.gateway{ fill: #ff8000 !important }
-.njg-link{ stroke-width: 5px }
 .njg-link:hover,.njg-link.njg-open{
     stroke-width: 6px !important;
     stroke-opacity: 0.7 !important
@@ -231,6 +227,18 @@ select#topologyselect {
     padding: 0;
 }
 
+.button-external {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    border-radius: 4px;
+    padding: 3px 7px;
+    background: #318ec5;
+    color: white;
+    border: 0;
+    height: 30px;
+}
+
 #legend{
     position: relative;
     display: flex;
@@ -261,7 +269,9 @@ select#topologyselect {
 #legend .connected{ background-color: #2E8B57 }
 #legend .router{ background-color: #3182bd }
 #legend .switch{ background-color: #ff8000 }
+#legend .ext{ background-color: #bf4b47 }
 #legend .network{ border-color: #999 }
+#legend .synctree{ border-color: #bf4b47 }
 
 /* header.htm styles */
 .header {
@@ -386,6 +396,10 @@ select#topologyselect {
 
 #switch {
   fill: #ff8000;
+}
+
+#external {
+  fill: #bf4b47;
 }
 
 /* lsa.htm styles */

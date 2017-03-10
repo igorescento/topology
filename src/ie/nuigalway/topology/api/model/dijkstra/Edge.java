@@ -6,12 +6,14 @@ public class Edge  {
 	private final Node source;
 	private final Node destination;
 	private final int metric;
+	private final String type;
 
-	public Edge(String i, Node s, Node d, int m) {
+	public Edge(String i, Node s, Node d, int m, String t) {
 		this.id = i;
 		this.source = s;
 		this.destination = d;
 		this.metric = m;
+		this.type = t;
 	}
 
 	public String getId() {
@@ -24,12 +26,17 @@ public class Edge  {
 	public Node getSource() {
 		return source;
 	}
+	
 	public int getMetric() {
 		return metric;
+	}
+	
+	public String getType() {
+		return type;
 	}
 
 	@Override
 	public String toString() {
-		return source + " " + destination;
+		return source.getName() + " " + destination.getName();
 	}
 }

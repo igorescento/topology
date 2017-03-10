@@ -1,8 +1,5 @@
-// version 0.1
 (function () {
-    /**
-     * vanilla JS implementation of jQuery.extend()
-     */
+
     d3._extend = function(defaults, options) {
         var extended = {},
             prop;
@@ -215,7 +212,6 @@
              * Called when a node is clicked
              */
             onClickNode: function(n) {
-              console.log(n);
                 var overlay = d3.select(".njg-overlay"),
                     overlayInner = d3.select(".njg-overlay > .njg-inner"),
                     html = "<p><b>id</b>: " + n.id + "</p>";
@@ -381,9 +377,10 @@
                                  .attr("class", function (link) {
                                      var baseClass = "njg-link ",
                                          //add property to each link to know which nodes they connect
-                                         //addClass = null;
+                                        //addClass = null;
                                         addClass = link.source.id.replace(/\./g, '-') + '_' + link.target.id.replace(/\./g, '-');
-                                         value = link.properties && link.properties[opts.linkClassProperty];
+                                        addClassType = link.type;
+                                        value = link.properties && link.properties[opts.linkClassProperty];
                                      if (opts.linkClassProperty && value) {
                                          // if value is stirng use that as class
                                          if (typeof(value) === "string") {
@@ -397,13 +394,18 @@
                                          }
                                          return baseClass + " " + addClass;
                                      }
-                                     return baseClass + addClass;
+                                     return baseClass + addClass + " " + addClassType;
                                  })
                                  .on("click", opts.onClickLink),
                     groups = panner.selectAll(".node")
                                    .data(nodes)
                                    .enter()
-                                   .append("g");
+                                   .append("g")
+                                   //add g class according to device typeof
+                                   .attr("class", function(node){
+                                      var gClass = node.type;
+                                      return gClass;
+                                   });
                     node = groups.append("circle")
                                  .attr("class", function (node) {
                                      var baseClass = "njg-node",
@@ -461,17 +463,6 @@
                         "fill": function(d){ return colors(d.linkCount); },
                         "cursor": "pointer"
                     });
-
-                    /*for(var i = 0; i < node.data().length; i++){
-                      console.log(i);
-                      console.log(node.data()[i]);
-                    };*/
-                  /*  else {
-                      node.style({
-                          "fill": '#ff8000',
-                          "cursor": "pointer"
-                      });
-                    }*/
                 }
                 // Metadata style
                 if(opts.metadata) {

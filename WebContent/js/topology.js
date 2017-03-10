@@ -2,10 +2,11 @@
 
 var netModule = angular.module('topology', []);
 
-netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, $timeout) {
+netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, $timeout, $location) {
 
     $scope.buttonTitle = "Show Sync Tree";
     $scope.header = "Complete";
+    $scope.externalTitle = "Hide External";
     $scope.responseReady = false;
     $scope.topology = true;
 
@@ -23,12 +24,6 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
                     defaultStyle: false,
                     labelDy: "-1.8em"
                 });
-
-                //TESTING
-                console.log(d3.selectAll("line"));
-                var el = document.getElementsByClassName('10-255-255-3_10-255-255-4');//.style('stroke', '#f90808');
-                console.log(el[0]);
-                el[0].style.stroke = '#f90808';
             });
     }
 
@@ -43,12 +38,15 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
             if($scope.buttonTitle === "Show Sync Tree"){
                 $scope.topology = true;
                 getFullNetwork();
+                $scope.externalTitle = "Hide External";
 
                 // call get method every n seconds
                 $scope.Timer = $interval(function() {
                     console.log(new Date());
                       $rootScope.connectionDetails.time = new Date().toLocaleString();
                       getFullNetwork();
+                      getRouters();
+                      $scope.externalTitle = "Hide External";
                 }, 25000);
             }
 
@@ -56,19 +54,22 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
                 console.log("Displaying sync tree, stopping the timer.");
                 $scope.topology = false;
                 $interval.cancel($scope.Timer);
+                $scope.externalTitle = "Hide External";
                 getSyncTree($rootScope.connectionDetails.routerid);
 
                 $scope.changedSource = function(rootNode){
                     if(rootNode !== ''){
-                        $scope.selectedRouter = rootNode;
-                        getSyncTree($scope.selectedRouter);
+                        $scope.routerfilter = rootNode;
+                        getSyncTree($scope.routerfilter);
+                        $scope.destinationFilter = "";
+                        $scope.distance = 0;
                     }
                 }
 
                 //highlight shortest path when destination selected
                 $scope.changedDestination = function(destination){
-                    if(destination !== '' && $scope.selectedRouter){
-                        if(destination === $scope.selectedRouter){
+                    if(destination !== '' && $scope.routerfilter){
+                        if(destination === $scope.routerfilter){
                             console.log("Same router selected.");
                             var links = d3.selectAll(".njg-link")[0];
                             for(var j = 0; j < links.length; j++) {
@@ -82,7 +83,7 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
                             for(var j = 0; j < links.length; j++) {
                                 links[j].style.stroke = "#999";
                             }
-                            getShortestPath($scope.selectedRouter, destination);
+                            getShortestPath($scope.routerfilter, destination);
                         }
                     }
                 }
@@ -92,7 +93,7 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
         //same approach as in switch view where data is polled initially every n seconds
         console.log("Displaying full network.");
         //poll data very often after table deletion
-        $interval(function(){
+        var getDataPromise = $interval(function(){
           if(!$scope.responseReady){
               getRouters();
               if($scope.buttonTitle === "Show Sync Tree"){
@@ -108,8 +109,25 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
 
         // call get method every n seconds
         $scope.Timer = $interval(function() {
+            getRouters();
             getFullNetwork();
-        }, 25000);
+        }, 60000);
+
+        /* Show / Hide external networks - nodes and links included */
+        $scope.ShowExternal = function() {
+          $scope.externalTitle = $scope.externalTitle === "Hide External" ? "Show External" : "Hide External";
+          var externals = document.getElementsByClassName("external");
+          if($scope.externalTitle === "Show External"){
+              Array.from(externals).forEach(v => {
+                  v.style.display = "none";
+              })
+          }
+          else {
+              Array.from(externals).forEach(v => {
+                  v.style.display = "inherit";
+              })
+          }
+        }
 
     }
 
@@ -117,7 +135,8 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
     $scope.$on("$destroy",function(){
         if (angular.isDefined($scope.Timer)) {
             $interval.cancel($scope.Timer);
-            console.log("Timer was cancelled.");
+            $interval.cancel(getDataPromise);
+            console.log("Both timers were cancelled.");
         }
     });
 
@@ -157,6 +176,9 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
             })
             .catch(function(error){
                 console.log("Error retrieving full topology: " + error);
+                $scope.responseReady = false;
+                $rootScope.isDataLoaded = false;
+                $location.path('/connect');
             });
 
     };
@@ -211,8 +233,13 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
         $http(config)
             .then(function (response) {
                 $scope.routers = response.data;
+                console.log($scope.routers);
+                //initialize the selector for source with router where we're logging in
+                $scope.routerfilter = $rootScope.connectionDetails.routerid;
             })
             .catch(function(error){
+                $scope.responseReady = false;
+                $rootScope.isDataLoaded = false;
                 console.log("ERROR RETRIEVING ROUTER DATA: " + error);
             });
 
@@ -290,7 +317,7 @@ function processData(data, rId){
 
     newNodes = data.nodes;
     data.edges.forEach(function(row){
-        links.push({ "source": row.source.id, "target": row.destination.id, "cost": row.metric, "deleted": false});
+        links.push({ "source": row.source.id, "target": row.destination.id, "cost": row.metric, "deleted": false, "type": row.type});
     })
 
     /* check for same nodes / targets - need to be removed*/
