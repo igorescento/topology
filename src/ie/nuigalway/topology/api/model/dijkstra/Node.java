@@ -2,9 +2,10 @@ package ie.nuigalway.topology.api.model.dijkstra;
 
 public class Node {
 
-	final private String id;
-	final private String label;
-	final private String type;
+	private String id;
+	private String label;
+	private String type;
+	private String interf;
 
 	public Node(String i, String l, String t) {
 		this.id = i;
@@ -22,6 +23,18 @@ public class Node {
 
 	public String getType() {
 		return type;
+	}
+	
+	public String getLabel() {
+		return label;
+	}
+
+	public String getInterf() {
+		return interf;
+	}
+	
+	public void setInterf(String a) {
+		interf = a;
 	}
 
 	@Override

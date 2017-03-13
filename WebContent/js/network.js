@@ -4,14 +4,15 @@ network.controller('networksController', function($rootScope, $scope, $http, $lo
 
   var headers = [
     { name: "id", value:"ID" },
-    { name: "netmask", value:"Mask"},
-    { name: "routersid", value:"Routers"},
+    { name: "netmask", value:"Mask" },
+    { name: "routersid", value:"Routers" },
     { name: "numrouters", value:"# of Routers" },
-    { name: "originator", value:"Originator"},
-    { name: "firstaddr", value:"First IP"},
-    { name: "lastaddr", value:"Last IP"},
-    { name: "networkaddr", value:"Network IP"},
-    { name: "broadcastaddr", value:"Broadcast IP"}
+    { name: "originator", value:"Originator" },
+    { name: "firstaddr", value:"First IP" },
+    { name: "lastaddr", value:"Last IP" },
+    { name: "networkaddr", value:"Network IP" },
+    { name: "broadcastaddr", value:"Broadcast IP" },
+    { name: "ipavailable", value:"Available IPs" }
   ];
 
   $scope.singleSelect = headers;
@@ -93,8 +94,11 @@ network.controller('networksController', function($rootScope, $scope, $http, $lo
       return v1.value.localeCompare(v2.value);
     }
   }
+  else if(v1.type === 'number' && v2.type === 'number') {
+      return (v1.value < v2.value) ? -1 : 1;
+  }
   else {
-    return (v1.index < v2.index) ? -1 : 1;
+      return (v1.index < v2.index) ? -1 : 1;
   }
 };
 

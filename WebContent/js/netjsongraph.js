@@ -21,7 +21,7 @@
       *   @name d3._pxToNumber
       * Convert strings like "10px" to 10
       *
-      * @param  {string}       val         The value to convert
+      * @param  {string}       val The value to convert
       * @return {int}              The converted integer
       */
     d3._pxToNumber = function(val) {
@@ -49,6 +49,7 @@
       * @param  {object}      element
       * @param  {object}      container
       */
+
      d3._getPosition = function(element, container) {
          var n = element.node(),
              nPos = n.getBoundingClientRect();
@@ -98,6 +99,7 @@
          * @param  {function}   onClickNode                     Called when a node is clicked
          * @param  {function}   onClickLink                     Called when a link is clicked
          */
+
         opts = d3._extend({
             el: "#graph",
             metadata: true,
@@ -116,42 +118,17 @@
             labelDy: "-1.3em",
             nodeClassProperty: null,
             linkClassProperty: null,
-            /**
-             * @function
-             * @name onInit
-             *
-             * Callback function executed on initialization
-             * @param  {string|object}  url     The netJson remote url or object
-             * @param  {object}         opts    The object of passed arguments
-             * @return {function}
-             */
+
+            //Callback function executed on initialization
             onInit: function(url, opts) {},
-            /**
-             * @function
-             * @name onLoad
-             *
-             * Callback function executed after data has been loaded
-             * @param  {string|object}  url     The netJson remote url or object
-             * @param  {object}         opts    The object of passed arguments
-             * @return {function}
-             */
+
+            //Callback function executed after data has been loaded
             onLoad: function(url, opts) {},
-            /**
-             * @function
-             * @name onEnd
-             *
-             * Callback function executed when initial animation is complete
-             * @param  {string|object}  url     The netJson remote url or object
-             * @param  {object}         opts    The object of passed arguments
-             * @return {function}
-             */
+
+            //Callback function executed when initial animation is complete
             onEnd: function(url, opts) {},
-            /**
-             * @function
-             * @name linkDistanceFunc
-             *
-             * By default, high density areas have longer links
-             */
+
+            //high density areas have longer links
             linkDistanceFunc: function(d){
                 var val = opts.linkDistance;
                 if(d.source.linkCount >= 4 && d.target.linkCount >= 4) {
@@ -159,26 +136,16 @@
                 }
                 return val;
             },
-            /**
-             * @function
-             * @name redraw
-             *
-             * Called on zoom and pan
-             */
+
+            //Called on zoom and pan
             redraw: function() {
                 panner.attr("transform",
                     "translate(" + d3.event.translate + ") " +
                     "scale(" + d3.event.scale + ")"
                 );
             },
-            /**
-             * @function
-             * @name prepareData
-             *
-             * Convert NetJSON NetworkGraph to the data structure consumed by d3
-             *
-             * @param graph {object}
-             */
+
+            //Convert NetJSON NetworkGraph to the data structure consumed by d3
             prepareData: function(graph) {
                 var nodesMap = {},
                     nodes = graph.nodes.slice(), // copy
@@ -205,27 +172,43 @@
                 }
                 return { "nodes": nodes, "links": links };
             },
-            /**
-             * @function
-             * @name onClickNode
-             *
-             * Called when a node is clicked
-             */
+
+            //Called on a node click
             onClickNode: function(n) {
                 var overlay = d3.select(".njg-overlay"),
                     overlayInner = d3.select(".njg-overlay > .njg-inner"),
-                    html = "<p><b>id</b>: " + n.id + "</p>";
-                    if(n.label) { html += "<p><b>label</b>: " + n.label + "</p>"; }
-                    if(n.properties) {
-                        for(var key in n.properties) {
-                            if(!n.properties.hasOwnProperty(key)) { continue; }
-                            html += "<p><b>"+key.replace(/_/g, " ")+"</b>: " + n.properties[key] + "</p>";
+                    html = "";
+
+
+                if(n.type === "router"){
+                    html += "<p><b>Router ID: </b>" + n.id + "</p>";
+                    html += "<p><b>Interfaces: </b></p>";
+
+                    if(n.interf){
+                        var inter = n.interf.split(",");
+                        for(var i in inter){
+                            html += "<p>&emsp;" + inter[i] + "</p>"
+                        }
                     }
                 }
-                if(n.linkCount) { html += "<p><b>links</b>: " + n.linkCount + "</p>"; }
-                if(n.local_addresses) {
-                    html += "<p><b>local addresses</b>:<br>" + n.local_addresses.join('<br>') + "</p>";
+                if(n.type === "external"){
+                    html += "<p><b>External ID: </b>" + n.id + "</p>";
+                    html += "<p><b>External Routes: </b></p>";
+
+                    if(n.interf){
+                        var inter = n.interf.split(",");
+                        for(var i in inter){
+                            html += "<p>&emsp;" + inter[i] + "</p>"
+                        }
+                    }
                 }
+                if(n.type === "switch"){
+                    html += "<p><b>Switch ID: </b>" + n.id + "</p>";
+                }
+                if(n.linkCount) {
+                    html += "<p><b>Links</b>: " + n.linkCount + "</p>";
+                }
+
                 overlayInner.html(html);
                 overlay.classed("njg-hidden", false);
                 overlay.style("display", "block");
@@ -233,18 +216,15 @@
                 removeOpenClass();
                 d3.select(this).classed("njg-open", true);
             },
-            /**
-             * @function
-             * @name onClickLink
-             *
-             * Called when a node is clicked
-             */
+
+            //Called on link click
             onClickLink: function(l) {
                 var overlay = d3.select(".njg-overlay"),
                     overlayInner = d3.select(".njg-overlay > .njg-inner"),
-                    html = "<p><b>source</b>: " + (l.source.label || l.source.id) + "</p>";
-                    html += "<p><b>target</b>: " + (l.target.label || l.target.id) + "</p>";
-                    html += "<p><b>cost</b>: " + l.cost + "</p>";
+                    html = "<p><b>Connected routers:</b></p>"
+                    html += "<p>&emsp;" + (l.source.label || l.source.id) + "</p>";
+                    html += "<p>&emsp;" + (l.target.label || l.target.id) + "</p>";
+                    html += "<p><b>Cost</b>: " + l.cost + "</p>";
                 if(l.properties) {
                     for(var key in l.properties) {
                         if(!l.properties.hasOwnProperty(key)) { continue; }
@@ -268,6 +248,7 @@
             opts.friction = 0.3;
             opts.gravity = 0;
         }
+
         if(opts.el == "body") {
             var body = d3.select(opts.el),
                 rect = body.node().getBoundingClientRect();
@@ -305,28 +286,18 @@
             metadata = d3.select(opts.el).append("div").attr("class", "njg-metadata"),
             metadataInner = metadata.append("div").attr("class", "njg-inner"),
             closeMetadata = metadata.append("a").attr("class", "njg-close"),
-            // container of ungrouped networks
-            str = [],
-            selected = [],
-            /**
-             * @function
-             * @name removeOpenClass
-             *
-             * Remove open classes from nodes and links
-             */
+
+            //Remove open classes from nodes and links
             removeOpenClass = function () {
                 d3.selectAll("svg .njg-open").classed("njg-open", false);
             };
             processJson = function(graph) {
-                /**
-                 * Init netJsonGraph
-                 */
+                //Init netJsonGraph
                 init = function(url, opts) {
                     d3.netJsonGraph(url, opts);
                 };
-                /**
-                 * Remove all instances
-                 */
+
+                //Remove all instances
                 destroy = function() {
                     force.stop();
                     d3.select("#selectGroup").remove();
@@ -341,10 +312,8 @@
                     nodes = [];
                     links = [];
                 };
-                /**
-                 * Destroy and e-init all instances
-                 * @return {[type]} [description]
-                 */
+
+                //Destroy and e-init all instances
                 reInit = function() {
                     destroy();
                     init(url, opts);
@@ -354,13 +323,13 @@
                     links = data.links,
                     nodes = data.nodes;
 
-                // disable some transitions while dragging
+                // disable transitions during drag
                 drag.on('dragstart', function(n){
                     d3.event.sourceEvent.stopPropagation();
                     zoom.on('zoom', null);
                     d3.select(this).classed("fixed", n.fixed = true);
                 })
-                // re-enable transitions when dragging stops
+                // re-enable transitions drag stop
                 .on('dragend', function(n){
                     zoom.on('zoom', opts.redraw);
                 })
@@ -377,26 +346,13 @@
                                  .attr("class", function (link) {
                                      var baseClass = "njg-link ",
                                          //add property to each link to know which nodes they connect
-                                        //addClass = null;
-                                        addClass = link.source.id.replace(/\./g, '-') + '_' + link.target.id.replace(/\./g, '-');
-                                        addClassType = link.type;
-                                        value = link.properties && link.properties[opts.linkClassProperty];
-                                     if (opts.linkClassProperty && value) {
-                                         // if value is stirng use that as class
-                                         if (typeof(value) === "string") {
-                                             addClass = value;
-                                         }
-                                         else if (typeof(value) === "number") {
-                                             addClass = opts.linkClassProperty + value;
-                                         }
-                                         else if (value === true) {
-                                             addClass = opts.linkClassProperty;
-                                         }
-                                         return baseClass + " " + addClass;
-                                     }
+                                         addClass = link.source.id.replace(/\./g, '-') + '_' + link.target.id.replace(/\./g, '-');
+                                         addClassType = link.type;
+
                                      return baseClass + addClass + " " + addClassType;
                                  })
                                  .on("click", opts.onClickLink),
+                    //create nodes with respective classes and graphical elements
                     groups = panner.selectAll(".node")
                                    .data(nodes)
                                    .enter()
@@ -408,22 +364,8 @@
                                    });
                     node = groups.append("circle")
                                  .attr("class", function (node) {
-                                     var baseClass = "njg-node",
-                                         addClass = null;
-                                         value = node.properties && node.properties[opts.nodeClassProperty];
-                                     if (opts.nodeClassProperty && value) {
-                                         // if value is string use that as class
-                                         if (typeof(value) === "string") {
-                                             addClass = value;
-                                         }
-                                         else if (typeof(value) === "number") {
-                                             addClass = opts.nodeClassProperty + value;
-                                         }
-                                         else if (value === true) {
-                                             addClass = opts.nodeClassProperty;
-                                         }
-                                         return baseClass + " " + addClass;
-                                     }
+                                      var baseClass = "njg-node";
+
                                      return baseClass +  " " + "color-" + node.color;
                                  })
                                  .attr("r", opts.circleRadius)
@@ -432,30 +374,22 @@
                                  .call(drag),
 
                     labels = groups.append('text')
-                                       .text(function(n){ return n.label || n.id })
-                                       .attr('dx', opts.labelDx)
-                                       .attr('dy', opts.labelDy)
-                                       .attr('class', 'njg-tooltip');
+                                   .text(function(n){ return n.label || n.id })
+                                   .attr('dx', opts.labelDx)
+                                   .attr('dy', opts.labelDy)
+                    .attr('class', 'njg-tooltip');
 
                 // Close overlay
                 closeOverlay.on("click", function() {
                     removeOpenClass();
                     overlay.classed("njg-hidden", true);
                 });
-                // Close Metadata panel
+                // Close metadata panel
                 closeMetadata.on("click", function() {
-                    // Reinitialize the page
-                    if(graph.type === "NetworkCollection") {
-                        reInit();
-                    }
-                    else {
-                        removeOpenClass();
-                        metadata.classed("njg-hidden", true);
-                    }
+                    removeOpenClass();
+                    metadata.classed("njg-hidden", true);
                 });
-                // default style
-                // TODO: probably change defaultStyle
-                // into something else
+                // default style - possibility to implement own style
                 if(opts.defaultStyle) {
                     var colors = d3.scale.category20c();
 
@@ -464,30 +398,21 @@
                         "cursor": "pointer"
                     });
                 }
-                // Metadata style
+                // metadata style hide after 10 seconds
                 if(opts.metadata) {
                     metadata.attr("class", "njg-metadata").style("display", "block");
+                    setTimeout(function() {
+                        removeOpenClass();
+                        metadata.classed("njg-hidden", true);
+                    }, 10000);
                 }
 
-                var attrs = ["protocol",
-                             "version",
-                             "revision",
-                             "metric",
-                             "router_id",
-                             "topology_id"],
-                    html = "";
-                if(graph.label) {
-                    html += "<h3>" + graph.label + "</h3>";
-                }
-                for(var i in attrs) {
-                    var attr = attrs[i];
-                    if(graph[attr]) {
-                        html += "<p><b>" + attr + "</b>: <span>" + graph[attr] + "</span></p>";
-                    }
-                }
+                //inner html to add more info to metadata panel
+                var html = "";
+
                 // Add nodes and links count
-                html += "<p><b>nodes</b>: <span>" + graph.nodes.length + "</span></p>";
-                html += "<p><b>links</b>: <span>" + graph.links.length + "</span></p>";
+                html += "<p><b>Nodes: </b><span>" + graph.nodes.length + "</span></p>";
+                html += "<p><b>Links: </b><span>" + graph.links.length + "</span></p>";
                 metadataInner.html(html);
                 metadata.classed("njg-hidden", false);
 
@@ -533,49 +458,20 @@
             processJson(url);
         }
         else {
-            /**
-            * Parse the provided json file
-            * and call processJson() function
-            *
-            * @param  {string}     url         The provided json file
-            * @param  {function}   error
-            */
+            //Parse the provided json file and call processJson() function
             d3.json(url, function(error, graph) {
-                if(error) { throw error; }
-                /**
-                * Check if the json contains a NetworkCollection
-                */
-                if(graph.type === "NetworkCollection") {
-                    var selectGroup = body.append("div").attr("id", "njg-select-group"),
-                        select = selectGroup.append("select")
-                                            .attr("id", "select");
-                        str = graph;
-                    select.append("option")
-                          .attr({
-                              "value": "",
-                              "selected": "selected",
-                              "name": "default",
-                              "disabled": "disabled"
-                          })
-                          .html("Choose the network to display");
-                    graph.collection.forEach(function(structure) {
-                        select.append("option").attr("value", structure.type).html(structure.type);
-                        // Collect each network json structure
-                        selected[structure.type] = structure;
-                    });
-                    select.on("change", function() {
-                        selectGroup.attr("class", "njg-hidden");
-                        // Call selected json structure
-                        processJson(selected[this.options[this.selectedIndex].value]);
-                    });
+                if(error) {
+                    throw error;
                 }
                 else {
                     processJson(graph);
                 }
             });
         }
-     };
-     function dragstart(d) {
+    };
+
+    //pin the node to fixed position
+    function dragstart(d) {
         d3.select(this).classed("fixed", d.fixed = true);
-     }
+    }
 })();

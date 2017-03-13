@@ -22,29 +22,31 @@
 
         <thead>
             <tr>
-                <th class="networktable-id" custom-sort order="'id'" sort="sort">ID&nbsp;</th>
+                <!--<th class="networktable-id" custom-sort order="'id'" sort="sort">ID&nbsp;</th> -->
+                <th class="networktable-networkaddr" custom-sort order="'networkaddr'" sort="sort">Network IP&nbsp;</th>
                 <th class="networktable-netmask" custom-sort order="'netmask'" sort="sort">Mask&nbsp;</th>
                 <th class="networktable-routersid" custom-sort order="'routersid'" sort="sort">Routers&nbsp;</th>
                 <th class="networktable-numrouters" custom-sort order="'numrouters'" sort="sort"># of Routers&nbsp;</th>
-                <th class="networktable-originator" custom-sort order="'originator'" sort="sort">Originator&nbsp;</th>
+                <!--<th class="networktable-originator" custom-sort order="'originator'" sort="sort">Originator&nbsp;</th>-->
                 <th class="networktable-firstaddr" custom-sort order="'firstaddr'" sort="sort">First IP&nbsp;</th>
                 <th class="networktable-lastaddr" custom-sort order="'lastaddr'" sort="sort">Last IP&nbsp;</th>
-                <th class="networktable-networkaddr" custom-sort order="'networkaddr'" sort="sort">Network IP&nbsp;</th>
                 <th class="networktable-broadcastaddr" custom-sort order="'broadcastaddr'" sort="sort">Broadcast IP&nbsp;</th>
+                <th class="networktable-ipavailable" custom-sort order="'ipavailable'" sort="sort">Available IPs&nbsp;</th>
             </tr>
         </thead>
 
         <tbody>
             <tr ng-repeat="item in items | orderBy:sort.sortingOrder:sort.reverse:ipComparator | searchFilter:{term:networksearch, type:filterList} | filter: networksearch">
-                <td>{{item.id}}</td>
+                <!--<td>{{item.id}}</td>-->
+                <td>{{item.networkaddr}}</td>
                 <td>{{item.netmask}}</td>
                 <td>{{item.routersid}}</td>
                 <td>{{item.numrouters}}</td>
-                <td>{{item.originator}}</td>
+                <!--<td>{{item.originator}}</td>-->
                 <td>{{item.firstaddr}}</td>
                 <td>{{item.lastaddr}}</td>
-                <td>{{item.networkaddr}}</td>
                 <td>{{item.broadcastaddr}}</td>
+                <td>{{item.ipavailable}}</td>
             </tr>
         </tbody>
     </table>

@@ -7,10 +7,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.hibernate.Criteria;
+import org.hibernate.SQLQuery;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.type.StringType;
 
 import ie.nuigalway.topology.domain.entities.Lsa;
 
@@ -76,5 +78,21 @@ public class LsaDAO extends GenericHibernateDAOFilter<Lsa, Integer>{
 		.createCriteria(getPersistentClass()).add(Restrictions.eq("IdTypePk.type", value)).list();
 
 		return list;
+	}
+	
+	/**
+	 * Method to return all external routes based on routerid
+	 */
+	public String getExternalRoutes(Long routerid) {
+		
+		String interfaces;
+		
+		SQLQuery query = getSession().createSQLQuery("SELECT group_concat(inet_ntoa(id)) as external FROM mikrotik.lsa "
+				+ " where type = 'as-external' and id <> :routerid");
+		query.setParameter("routerid", routerid);
+		query.addScalar("external", new StringType());
+		interfaces = (String)query.uniqueResult();
+		
+		return interfaces;
 	}
 }

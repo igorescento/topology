@@ -38,6 +38,9 @@ public class NetworkLsaModel {
 
 	@JsonProperty
 	private Long broadcastaddr;
+	
+	@JsonProperty
+	private Long ipavailable;
 
 	public NetworkLsaModel(){ };
 
@@ -52,6 +55,7 @@ public class NetworkLsaModel {
 		this.lastaddr = nl.getLastaddr();
 		this.networkaddr = nl.getNetworkaddr();
 		this.broadcastaddr = nl.getBroadcastaddr();
+		this.ipavailable = this.lastaddr + 1 - this.firstaddr - this.numrouters;
 	}
 
 	public String getId() {
@@ -126,8 +130,8 @@ public class NetworkLsaModel {
 		return IPv4Converter.longToIpv4(networkaddr);
 	}
 
-	public void setNetworkAddr(Long networkAddr) {
-		this.networkaddr = networkAddr;
+	public void setNetworkaddr(Long networkaddr) {
+		this.networkaddr = networkaddr;
 	}
 
 	public String getBroadcastaddr() {
@@ -136,6 +140,14 @@ public class NetworkLsaModel {
 
 	public void setBroadcastaddr(Long broadcastAddr) {
 		this.broadcastaddr = broadcastAddr;
+	}
+	
+	public Long getIpavailable() {
+		return ipavailable;
+	}
+
+	public void setIpavailable(Long ipavailable) {
+		this.ipavailable = ipavailable;
 	}
 
 	public NetworkLsa toEntity() {

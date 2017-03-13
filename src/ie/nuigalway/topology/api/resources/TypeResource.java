@@ -67,7 +67,7 @@ public class TypeResource {
 	}
 	
 	/**
-	 * Get all LSA router instances and populate routers table.
+	 * Get distinct routers.
 	 */
 	@GET
 	@Path("/distinctrouter")

@@ -4,11 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -73,10 +70,9 @@ public class TopologyResource {
 
 			//loop thru routers and check which network it belongs to
 			for(RouterLsa r: rlsa){
-
 				Node rout = new Node(IPv4Converter.longToIpv4(r.getId()), IPv4Converter.longToIpv4(r.getId()), r.getType());
 				routers.add(rout);
-
+				
 				for(NetworkLsa n: nlsa){
 					if(r.getData() >= n.getFirstaddr() && r.getData() <= n.getLastaddr() && n.getRoutersid().contains(r.getId().toString())){
 
@@ -128,14 +124,22 @@ public class TopologyResource {
 			List<Node> additional = new ArrayList<>();
 			
 			for(Node r : routers){
+				//add interfaces to each router
+				String interf = routerDAO.getRouterInterfaces(IPv4Converter.ipv4ToLong(r.getId()));
+				r.setInterf(interf);
+				
 				for(Lsa e : external) {
 					if(r.getId().equals(IPv4Converter.longToIpv4(e.getIdTypePk().getId())) && e.getIdTypePk().getId() != e.getOriginator()){
 						System.out.println("EXTERNAL ROUTER: " + r.getId());
-		
+						//add external routes
+						String externalRoutes = ""; 
+						externalRoutes = lsaDAO.getExternalRoutes(IPv4Converter.ipv4ToLong(r.getId()));
+						
 						//create external node with an edge
 						int metric = 0;
 						Node ext = new Node("EXT_" + r.getId(), "EXT_" + r.getId(), "external");
-		
+						ext.setInterf(externalRoutes);
+						
 						String [] text = e.getBody().split("\\r?\\n");
 						for(String s : text){
 							if(s.contains("metric")){

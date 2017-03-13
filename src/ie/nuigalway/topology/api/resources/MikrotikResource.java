@@ -48,14 +48,12 @@ public class MikrotikResource {
 	private LsaDAO lsaDAOHibernate;
 	private RouterLsaDAO routerLsaDAO;
 	private NetworkLsaDAO netLsaDAO;
-	private Timer timer;
 
 	{
 		this.sessionFactory = HibernateUtil.getSessionFactory();
 		this.lsaDAOHibernate = new LsaDAO(sessionFactory);
 		this.routerLsaDAO = new RouterLsaDAO(sessionFactory);
 		this.netLsaDAO = new NetworkLsaDAO(sessionFactory);
-		this.timer = new Timer();
 	}
 
 	/**
@@ -65,6 +63,7 @@ public class MikrotikResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response retrieveLsa(ConnDataModel data){
 		
+		Timer timer = new Timer();
 		//timer utility to execute the code after successful login and repeatedly fetch all the data
 		System.out.println("TIMER RUNNNING " + timer.toString());
 		
@@ -381,7 +380,7 @@ public class MikrotikResource {
 				SubnetUtils utils = new SubnetUtils(address, mask);
 				SubnetInfo info = utils.getInfo();
 
-				nlsa.setNetworkAddr(IPv4Converter.ipv4ToLong(info.getNetworkAddress()));
+				nlsa.setNetworkaddr(IPv4Converter.ipv4ToLong(info.getNetworkAddress()));
 				nlsa.setBroadcastaddr(IPv4Converter.ipv4ToLong(info.getBroadcastAddress()));
 				nlsa.setFirstaddr(IPv4Converter.ipv4ToLong(info.getLowAddress()));
 				nlsa.setLastaddr(IPv4Converter.ipv4ToLong(info.getHighAddress()));
