@@ -20,7 +20,8 @@ lsa.controller('lsaController', function($rootScope, $scope, $http, $location) {
 
   /* load JSON with demo data */
   if($rootScope.isDemo){
-      $http.get('../demo/demo_lsa.json')
+      //$http.get('../demo/demo_lsa.json')
+        $http.get('demo/demo_lsa.json')
           .then(function(res){
               $scope.items = res.data;
               $scope.totalRows = res.data.length;

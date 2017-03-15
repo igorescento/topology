@@ -8,10 +8,9 @@
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/breadcrumb.css">
-    <link rel="stylesheet" href="css/search.css">
 
     <!-- Libraries -->
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+    <script src="lib/angular.min.js"></script>
     <script src="node_modules/core-js/client/shim.min.js"></script>
     <script src="node_modules/zone.js/dist/zone.js"></script>
     <script src="node_modules/rxjs/bundles/Rx.js"></script>
@@ -23,7 +22,7 @@
     <script src="node_modules/@angular/platform-browser/bundles/platform-browser.umd.js"></script>
     <script src="node_modules/@angular/platform-browser-dynamic/bundles/platform-browser-dynamic.umd.js"></script>
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+    <script src="lib/d3.min.js"></script>
 
     <!-- Modules -->
     <script src='js/routes.js'></script>
@@ -37,12 +36,14 @@
     <script src='js/network.js'></script>
 
     <base href="/index">
+    <!--<base href="/topology/">-->
   </head>
 
   <!-- Application -->
   <body ng-app="topologyApp">
 
-    <div ng-include src="'../html/header.htm'"></div>
+    <!--<div ng-include src="'../html/header.htm'"></div>-->
+    <div ng-include src="'html/header.htm'"></div>
     <div ng-view class="partials"></div>
 
   </body>

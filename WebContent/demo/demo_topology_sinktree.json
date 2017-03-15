@@ -1048,25 +1048,6 @@
       "type": "internal"
     },
     {
-      "id": "10.26.112.8",
-      "source": {
-        "id": "10.26.102.214",
-        "label": "10.26.102.214",
-        "type": "router",
-        "interf": null,
-        "name": "10.26.102.214"
-      },
-      "destination": {
-        "id": "10.99.0.34",
-        "label": "10.99.0.34",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.34"
-      },
-      "metric": 500,
-      "type": "internal"
-    },
-    {
       "id": "10.26.112.32",
       "source": {
         "id": "10.26.102.214",
@@ -1333,25 +1314,6 @@
       "type": "internal"
     },
     {
-      "id": "10.32.0.8",
-      "source": {
-        "id": "10.32.1.1",
-        "label": "10.32.1.1",
-        "type": "router",
-        "interf": null,
-        "name": "10.32.1.1"
-      },
-      "destination": {
-        "id": "10.99.0.32",
-        "label": "10.99.0.32",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.32"
-      },
-      "metric": 1000,
-      "type": "internal"
-    },
-    {
       "id": "10.32.0.0",
       "source": {
         "id": "10.32.1.1",
@@ -1482,44 +1444,6 @@
         "name": "10.99.0.94"
       },
       "metric": 10,
-      "type": "internal"
-    },
-    {
-      "id": "10.29.90.0",
-      "source": {
-        "id": "10.99.0.6",
-        "label": "10.99.0.6",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.6"
-      },
-      "destination": {
-        "id": "10.99.0.119",
-        "label": "10.99.0.119",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.119"
-      },
-      "metric": 10,
-      "type": "internal"
-    },
-    {
-      "id": "10.29.90.8",
-      "source": {
-        "id": "10.99.0.6",
-        "label": "10.99.0.6",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.6"
-      },
-      "destination": {
-        "id": "10.99.0.202",
-        "label": "10.99.0.202",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.202"
-      },
-      "metric": 110,
       "type": "internal"
     },
     {
@@ -1770,25 +1694,6 @@
       "type": "internal"
     },
     {
-      "id": "10.29.19.64",
-      "source": {
-        "id": "10.99.0.28",
-        "label": "10.99.0.28",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.28"
-      },
-      "destination": {
-        "id": "178.16.200.17",
-        "label": "178.16.200.17",
-        "type": "router",
-        "interf": null,
-        "name": "178.16.200.17"
-      },
-      "metric": 50,
-      "type": "internal"
-    },
-    {
       "id": "10.29.19.88",
       "source": {
         "id": "10.99.0.29",
@@ -1865,25 +1770,6 @@
       "type": "internal"
     },
     {
-      "id": "10.32.0.8",
-      "source": {
-        "id": "10.99.0.32",
-        "label": "10.99.0.32",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.32"
-      },
-      "destination": {
-        "id": "10.32.1.1",
-        "label": "10.32.1.1",
-        "type": "router",
-        "interf": null,
-        "name": "10.32.1.1"
-      },
-      "metric": 1000,
-      "type": "internal"
-    },
-    {
       "id": "10.32.0.16",
       "source": {
         "id": "10.99.0.32",
@@ -1938,25 +1824,6 @@
         "name": "10.99.0.111"
       },
       "metric": 10,
-      "type": "internal"
-    },
-    {
-      "id": "10.26.112.8",
-      "source": {
-        "id": "10.99.0.34",
-        "label": "10.99.0.34",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.34"
-      },
-      "destination": {
-        "id": "10.26.102.214",
-        "label": "10.26.102.214",
-        "type": "router",
-        "interf": null,
-        "name": "10.26.102.214"
-      },
-      "metric": 500,
       "type": "internal"
     },
     {
@@ -2112,25 +1979,6 @@
       "type": "internal"
     },
     {
-      "id": "10.28.64.0",
-      "source": {
-        "id": "10.99.0.44",
-        "label": "10.99.0.44",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.44"
-      },
-      "destination": {
-        "id": "10.99.0.133",
-        "label": "10.99.0.133",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.133"
-      },
-      "metric": 10,
-      "type": "internal"
-    },
-    {
       "id": "10.28.64.16",
       "source": {
         "id": "10.99.0.44",
@@ -2223,25 +2071,6 @@
         "name": "10.99.0.113"
       },
       "metric": 10,
-      "type": "internal"
-    },
-    {
-      "id": "10.250.2.40",
-      "source": {
-        "id": "10.99.0.49",
-        "label": "10.99.0.49",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.49"
-      },
-      "destination": {
-        "id": "10.250.2.38",
-        "label": "10.250.2.38",
-        "type": "router",
-        "interf": null,
-        "name": "10.250.2.38"
-      },
-      "metric": 500,
       "type": "internal"
     },
     {
@@ -3195,25 +3024,6 @@
       "type": "internal"
     },
     {
-      "id": "10.29.0.208",
-      "source": {
-        "id": "10.99.0.99",
-        "label": "10.99.0.99",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.99"
-      },
-      "destination": {
-        "id": "10.99.0.102",
-        "label": "10.99.0.102",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.102"
-      },
-      "metric": 10,
-      "type": "internal"
-    },
-    {
       "id": "10.29.0.152",
       "source": {
         "id": "10.99.0.99",
@@ -3287,25 +3097,6 @@
         "name": "10.99.0.102"
       },
       "metric": 10,
-      "type": "internal"
-    },
-    {
-      "id": "10.29.0.208",
-      "source": {
-        "id": "10.99.0.102",
-        "label": "10.99.0.102",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.102"
-      },
-      "destination": {
-        "id": "10.99.0.99",
-        "label": "10.99.0.99",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.99"
-      },
-      "metric": 150,
       "type": "internal"
     },
     {
@@ -3746,25 +3537,6 @@
       "type": "internal"
     },
     {
-      "id": "10.29.90.0",
-      "source": {
-        "id": "10.99.0.119",
-        "label": "10.99.0.119",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.119"
-      },
-      "destination": {
-        "id": "10.99.0.6",
-        "label": "10.99.0.6",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.6"
-      },
-      "metric": 10,
-      "type": "internal"
-    },
-    {
       "id": "10.7.17.0",
       "source": {
         "id": "10.99.0.119",
@@ -4064,25 +3836,6 @@
         "type": "router",
         "interf": null,
         "name": "10.26.67.1"
-      },
-      "metric": 10,
-      "type": "internal"
-    },
-    {
-      "id": "10.28.64.0",
-      "source": {
-        "id": "10.99.0.133",
-        "label": "10.99.0.133",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.133"
-      },
-      "destination": {
-        "id": "10.99.0.44",
-        "label": "10.99.0.44",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.44"
       },
       "metric": 10,
       "type": "internal"
@@ -4696,25 +4449,6 @@
       "type": "internal"
     },
     {
-      "id": "10.26.79.128",
-      "source": {
-        "id": "10.99.0.140",
-        "label": "10.99.0.140",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.140"
-      },
-      "destination": {
-        "id": "10.99.0.173",
-        "label": "10.99.0.173",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.173"
-      },
-      "metric": 20,
-      "type": "internal"
-    },
-    {
       "id": "10.250.2.232",
       "source": {
         "id": "10.99.0.142",
@@ -4810,25 +4544,6 @@
       "type": "internal"
     },
     {
-      "id": "10.26.108.32",
-      "source": {
-        "id": "10.99.0.147",
-        "label": "10.99.0.147",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.147"
-      },
-      "destination": {
-        "id": "10.99.0.149",
-        "label": "10.99.0.149",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.149"
-      },
-      "metric": 10,
-      "type": "internal"
-    },
-    {
       "id": "10.13.1.0",
       "source": {
         "id": "10.99.0.148",
@@ -4900,25 +4615,6 @@
         "type": "router",
         "interf": null,
         "name": "10.99.0.144"
-      },
-      "metric": 10,
-      "type": "internal"
-    },
-    {
-      "id": "10.26.108.32",
-      "source": {
-        "id": "10.99.0.149",
-        "label": "10.99.0.149",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.149"
-      },
-      "destination": {
-        "id": "10.99.0.147",
-        "label": "10.99.0.147",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.147"
       },
       "metric": 10,
       "type": "internal"
@@ -5285,25 +4981,6 @@
       "type": "internal"
     },
     {
-      "id": "10.13.9.0",
-      "source": {
-        "id": "10.99.0.164",
-        "label": "10.99.0.164",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.164"
-      },
-      "destination": {
-        "id": "10.99.0.168",
-        "label": "10.99.0.168",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.168"
-      },
-      "metric": 1001,
-      "type": "internal"
-    },
-    {
       "id": "10.13.1.8",
       "source": {
         "id": "10.99.0.164",
@@ -5589,25 +5266,6 @@
       "type": "internal"
     },
     {
-      "id": "10.13.9.0",
-      "source": {
-        "id": "10.99.0.168",
-        "label": "10.99.0.168",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.168"
-      },
-      "destination": {
-        "id": "10.99.0.164",
-        "label": "10.99.0.164",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.164"
-      },
-      "metric": 1001,
-      "type": "internal"
-    },
-    {
       "id": "10.26.108.64",
       "source": {
         "id": "10.99.0.169",
@@ -5703,25 +5361,6 @@
       "type": "internal"
     },
     {
-      "id": "10.26.79.128",
-      "source": {
-        "id": "10.99.0.173",
-        "label": "10.99.0.173",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.173"
-      },
-      "destination": {
-        "id": "10.99.0.140",
-        "label": "10.99.0.140",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.140"
-      },
-      "metric": 20,
-      "type": "internal"
-    },
-    {
       "id": "10.26.79.0",
       "source": {
         "id": "10.99.0.173",
@@ -5795,25 +5434,6 @@
         "name": "10.26.79.22"
       },
       "metric": 10,
-      "type": "internal"
-    },
-    {
-      "id": "10.29.90.8",
-      "source": {
-        "id": "10.99.0.202",
-        "label": "10.99.0.202",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.202"
-      },
-      "destination": {
-        "id": "10.99.0.6",
-        "label": "10.99.0.6",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.6"
-      },
-      "metric": 110,
       "type": "internal"
     },
     {
@@ -6042,25 +5662,6 @@
         "name": "10.99.0.126"
       },
       "metric": 10,
-      "type": "internal"
-    },
-    {
-      "id": "10.250.2.40",
-      "source": {
-        "id": "10.250.2.38",
-        "label": "10.250.2.38",
-        "type": "router",
-        "interf": null,
-        "name": "10.250.2.38"
-      },
-      "destination": {
-        "id": "10.99.0.49",
-        "label": "10.99.0.49",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.49"
-      },
-      "metric": 500,
       "type": "internal"
     },
     {
@@ -6346,25 +5947,6 @@
         "name": "94.230.111.65"
       },
       "metric": 100,
-      "type": "internal"
-    },
-    {
-      "id": "10.29.19.64",
-      "source": {
-        "id": "178.16.200.17",
-        "label": "178.16.200.17",
-        "type": "router",
-        "interf": null,
-        "name": "178.16.200.17"
-      },
-      "destination": {
-        "id": "10.99.0.28",
-        "label": "10.99.0.28",
-        "type": "router",
-        "interf": null,
-        "name": "10.99.0.28"
-      },
-      "metric": 80,
       "type": "internal"
     }
   ]

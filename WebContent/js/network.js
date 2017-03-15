@@ -24,7 +24,8 @@ network.controller('networksController', function($rootScope, $scope, $http, $lo
 
   /* load JSON with demo data */
   if($rootScope.isDemo){
-      $http.get('../demo/demo_network.json')
+      //$http.get('../demo/demo_network.json')
+      $http.get('demo/demo_network.json')
           .then(function(res){
               $scope.items = res.data;
               $scope.totalRows = res.data.length;

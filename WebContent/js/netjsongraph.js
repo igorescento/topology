@@ -107,8 +107,8 @@
             animationAtStart: true,
             scaleExtent: [0.25, 5],
             charge: -200, //-130 originally
-            linkDistance: 50,
-            linkStrength: 0.2,
+            linkDistance: 40,
+            linkStrength: 0.4,
             friction: 0.9,  // d3 default
             chargeDistance: Infinity,  // d3 default
             theta: 0.8,  // d3 default
@@ -116,8 +116,6 @@
             circleRadius: 8,
             labelDx: "0",
             labelDy: "-1.3em",
-            nodeClassProperty: null,
-            linkClassProperty: null,
 
             //Callback function executed on initialization
             onInit: function(url, opts) {},
@@ -131,6 +129,7 @@
             //high density areas have longer links
             linkDistanceFunc: function(d){
                 var val = opts.linkDistance;
+                //val = d.cost;
                 if(d.source.linkCount >= 4 && d.target.linkCount >= 4) {
                     return val * 2;
                 }
@@ -337,7 +336,6 @@
                     // avoid pan & drag conflict
                     d3.select(this).attr("x", d.x = d3.event.x).attr("y", d.y = d3.event.y);
                 });
-
                 force.nodes(nodes).links(links).start();
 
                 var link = panner.selectAll(".link")
@@ -436,9 +434,12 @@
 
                     node.attr("cx", function(d) {
                         return d.x;
+                        //bounding box
+                        //return d.x = Math.max(opts.circleRadius, Math.min(width - opts.circleRadius, d.x));
                     })
                     .attr("cy", function(d) {
                         return d.y;
+                        //return d.y = Math.max(opts.circleRadius, Math.min(height - opts.circleRadius, d.y));
                     });
 
                     labels.attr("transform", function(d) {

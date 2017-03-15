@@ -1,5 +1,7 @@
 package ie.nuigalway.topology.api.resources;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -14,6 +16,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.net.util.SubnetUtils;
 import org.apache.commons.net.util.SubnetUtils.SubnetInfo;
 import org.hibernate.HibernateException;
@@ -44,6 +47,8 @@ import me.legrange.mikrotik.MikrotikApiException;
 @Path("mikrotik")
 public class MikrotikResource {
 
+	ClassLoader loader = this.getClass().getClassLoader();
+
 	private SessionFactory sessionFactory;
 	private LsaDAO lsaDAOHibernate;
 	private RouterLsaDAO routerLsaDAO;
@@ -62,11 +67,33 @@ public class MikrotikResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response retrieveLsa(ConnDataModel data){
-		
+
+		//DEMO_TO_WORK_WITH_LSA_EXPORT_FROM_LIVE_ROUTER-----------------------
+		/*boolean demo = true;
+		if(demo){
+
+			try{
+				List<String> fromFile = new ArrayList<>();
+				fromFile = FileUtils.readLines(new File(loader.getResource("lsa-detail.txt").getFile()), "UTF-8");
+				deleteAllTables();
+				updateDemoFile(fromFile);
+				updateNetsTable();
+				updateRoutersTable();
+				return Response.ok().build();
+			} catch (IOException e) {
+				e.printStackTrace();
+				return Response.status(500).entity(e.getMessage()).build();
+			}
+		}
+
+		else {
+		}*/
+		//DEMO_END-------------------------------------------------------------
+
 		Timer timer = new Timer();
 		//timer utility to execute the code after successful login and repeatedly fetch all the data
 		System.out.println("TIMER RUNNNING " + timer.toString());
-		
+
 		//login to router and retrieve LSA table
 		try {
 			System.out.println("Connecting to router.");
@@ -77,17 +104,17 @@ public class MikrotikResource {
 				public void run()
 				{
 					System.out.println("Timer runnning. " + data.getIpaddress() + " @ " + new Date());
-					
+
 					//deleting all tables
 					System.out.println("Deleting old table. New data inserted.");
 					deleteAllTables();
-					
+
 					updateLsaTable(con);
 					updateNetsTable();
 					updateRoutersTable();
 				}
 			}, 0, 300000);
-			
+
 			return Response.ok().build();
 
 		} catch (MikrotikApiException e) {
@@ -95,6 +122,7 @@ public class MikrotikResource {
 			timer.cancel();
 			return Response.status(500).entity(e.getMessage()).build();
 		}
+
 	}
 
 	/**
@@ -334,7 +362,7 @@ public class MikrotikResource {
 					"Internal problem", "Error occured while retrieving data. " + e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * Method to update networks table
 	 */
@@ -346,7 +374,7 @@ public class MikrotikResource {
 			Collection<Lsa> lsaList = lsaDAOHibernate.findAllType("network");
 			Collection<LsaModel> lsaModelList = new ArrayList<LsaModel>();
 			Collection<NetworkLsa> networkLsaAll = new ArrayList<>();
-			
+
 			//processing data from LSA table to extract network details
 			for(Lsa l : lsaList) {
 
@@ -430,6 +458,71 @@ public class MikrotikResource {
 					"Internal problem.",
 					"Error while trying to retrieve data. "
 							+ e.getMessage());
+		}
+	}
+
+	/**
+	 * Create tables from lsa text file
+	 */
+	public void updateDemoFile(List<String> fromFile) {
+		List<String> lsa = new ArrayList<>();
+
+		String lsaObject = "";
+
+		for(String l : fromFile){
+			//break it down to meaningful object based on data from lsa export
+			if(!l.equals("")){
+				lsaObject += l;
+			}
+			else {
+				lsa.add(lsaObject);
+				lsaObject = "";
+			}
+		}
+
+		for(String lsaRow : lsa){
+
+			LsaModel lsaModel = new LsaModel();
+			String [] dat = lsaRow.split("body=");
+			String details = dat[0].trim();
+			String body = dat[1].trim().replaceAll("       ", "\n");
+
+			lsaModel.setBody(body);
+
+			for(String l : details.split(" +")){
+
+				String[] keyvalue = l.split("=");
+				//populate LSA table
+				if(keyvalue[0].equals("id")){
+					lsaModel.setId(IPv4Converter.ipv4ToLong(keyvalue[1]));
+				}
+				if(keyvalue[0].equals("instance")){
+					lsaModel.setInstance(keyvalue[1]);
+				}
+				if(keyvalue[0].equals("area")){
+					lsaModel.setArea(keyvalue[1]);
+				}
+				if(keyvalue[0].equals("type")){
+					lsaModel.setType(keyvalue[1]);
+				}
+				if(keyvalue[0].equals("originator")){
+					lsaModel.setOriginator(IPv4Converter.ipv4ToLong(keyvalue[1]));
+				}
+				if(keyvalue[0].equals("sequence-number")){
+					lsaModel.setSequence(keyvalue[1]);
+				}
+				if(keyvalue[0].equals("age")){
+					lsaModel.setAge(Integer.parseInt(keyvalue[1]));
+				}
+				if(keyvalue[0].equals("checksum")){
+					lsaModel.setChecksum(keyvalue[1]);
+				}
+				if(keyvalue[0].equals("options")){
+					lsaModel.setOptions(keyvalue[1]);
+				}
+			}
+
+			addLsa(lsaModel);
 		}
 	}
 }

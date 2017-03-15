@@ -33,6 +33,14 @@ public class RouterLsa {
 	
 	@Column(name = "metric")
 	private Integer metric;
+	
+	public Integer getSeq() {
+		return seq;
+	}
+
+	public void setSeq(Integer seq) {
+		this.seq = seq;
+	}
 
 	public Long getId() {
 		return id;

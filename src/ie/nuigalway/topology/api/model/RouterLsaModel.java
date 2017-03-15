@@ -37,6 +37,7 @@ public class RouterLsaModel {
 		this.bodyid = rl.getBodyid();
 		this.data = rl.getData();
 		this.metric = rl.getMetric();
+		this.seq = rl.getSeq();
 	}
 	
 	public Integer getSeq() {

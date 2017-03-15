@@ -175,7 +175,7 @@ public class TopologyResource {
 	 */
 
 	@GET
-	@Path("synctree/{id}")
+	@Path("sinktree/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Graph getSyncTree(@PathParam("id") String id){
 

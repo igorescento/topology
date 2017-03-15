@@ -68,7 +68,7 @@ connectModule.factory('AuthenticationService',
         return service;
     }])
 
-/* connection controller */ 
+/* connection controller */
 connectModule.controller('connectionController',
     ['$scope', '$rootScope', '$location', 'AuthenticationService',
     function ($scope, $rootScope, $location, AuthenticationService) {
@@ -83,9 +83,9 @@ connectModule.controller('connectionController',
         }
 
         $scope.login = function () {
-            $scope.dataLoading = true;
-            AuthenticationService.Login($scope.ipaddress, $scope.username, $scope.password, function(response) {
-                if(parseInt(response.status) === 200) {
+            $scope.dataLoading = true;
+            AuthenticationService.Login($scope.ipaddress, $scope.username, $scope.password, function(response) {
+                if(parseInt(response.status) === 200) {
                     if($rootScope.isDemo){
                         $location.path('/topology');
                         for(var key in mappings){
@@ -98,13 +98,13 @@ connectModule.controller('connectionController',
                     /*setting root scope */
                     $rootScope.isDataLoaded = true;
                     $rootScope.connectionDetails = { ipaddress: $scope.ipaddress, time: (new Date()).toLocaleString(), routerid: null };
-                } else {
-                    $scope.error = "Error " + response.status + ": " + (response.data === null ? "Connection Error." : response.data);
-                    $scope.dataLoading = false;
+                } else {
+                    $scope.error = "Error " + response.status + ": " + (response.data === null ? "Connection Error." : response.data);
+                    $scope.dataLoading = false;
                     $rootScope.connectedRouter = null;
-                }
-            });
-        };
+                }
+            });
+        };
 
         $scope.demo = {
             check: 'false'

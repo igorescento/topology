@@ -4,7 +4,7 @@ var netModule = angular.module('topology', []);
 
 netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, $timeout, $location) {
 
-    $scope.buttonTitle = "Show Sync Tree";
+    $scope.buttonTitle = "Show Sink Tree";
     $scope.header = "Complete";
     $scope.externalTitle = "Hide External";
     $scope.responseReady = false;
@@ -12,30 +12,74 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
 
     /* load JSON with demo data */
     if($rootScope.isDemo){
+        $scope.background = "#ffffff";
         $scope.responseReady = true;
-        $http.get('../demo/demo_topology.json')
-            .then(function(res){
-                $scope.topology = res.data;
 
-                d3.netJsonGraph($scope.topology , {
-                    linkDistance: 50,
-                    charge: -200,
-                    circleRadius: 12,
-                    defaultStyle: false,
-                    labelDy: "-1.8em"
-                });
+        //$http.get('../demo/demo_topology.json')
+        $http.get('demo/demo_topology.json')
+            .then(function(res){
+                if(d3.select("svg")){
+                    d3.select("svg").remove();
+                    d3.select(".njg-metadata").remove();
+                    d3.select(".njg-overlay").remove();
+                }
+                processData(res.data, "10.99.0.148");
             });
+
+      //hide some elements that are not available in demo version
+      var sinktree = document.getElementsByClassName('sync-tree');
+      var externalB = document.getElementsByClassName('button-external');
+      for (var i = 0; i < sinktree.length; i += 1) {
+          sinktree[i].style.display = 'none';
+      }
+      for (var i = 0; i < externalB.length; i += 1) {
+          externalB[i].style.display = 'none';
+      }
+
+      $scope.SwitchView = function () {
+          $scope.buttonTitle = $scope.buttonTitle === "Show Sink Tree" ? "Show Topology" : "Show Sink Tree";
+          $scope.header = $scope.header === "Complete" ? "Sink Tree" : "Complete";
+
+          //switch view active - loading topology
+          if($scope.buttonTitle === "Show Sink Tree"){
+              //$http.get('../demo/demo_topology.json')
+              $http.get('demo/demo_topology.json')
+                  .then(function(res){
+                      if(d3.select("svg")){
+                          d3.select("svg").remove();
+                          d3.select(".njg-metadata").remove();
+                          d3.select(".njg-overlay").remove();
+                      }
+                      processData(res.data, "10.99.0.148");
+                  });
+          }
+
+          else {
+              console.log("Displaying sink tree, stopping the timer.");
+              $scope.topology = false;
+              //$http.get('../demo/demo_topology_sinktree.json')
+              $http.get('demo/demo_topology_sinktree.json')
+                  .then(function(res){
+                      if(d3.select("svg")){
+                          d3.select("svg").remove();
+                          d3.select(".njg-metadata").remove();
+                          d3.select(".njg-overlay").remove();
+                      }
+                      processData(res.data, "10.99.0.148");
+                  });
+          }
+      }
     }
 
     /* live data */
     else {
 
         $scope.SwitchView = function () {
-            $scope.buttonTitle = $scope.buttonTitle === "Show Sync Tree" ? "Show Topology" : "Show Sync Tree";
-            $scope.header = $scope.header === "Complete" ? "Sync Tree" : "Complete";
+            $scope.buttonTitle = $scope.buttonTitle === "Show Sink Tree" ? "Show Topology" : "Show Sink Tree";
+            $scope.header = $scope.header === "Complete" ? "Sink Tree" : "Complete";
 
             //switch view active - loading topology
-            if($scope.buttonTitle === "Show Sync Tree"){
+            if($scope.buttonTitle === "Show Sink Tree"){
                 $scope.topology = true;
                 getFullNetwork();
                 $scope.externalTitle = "Hide External";
@@ -51,16 +95,16 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
             }
 
             else {
-                console.log("Displaying sync tree, stopping the timer.");
+                console.log("Displaying sink tree, stopping the timer.");
                 $scope.topology = false;
                 $interval.cancel($scope.Timer);
                 $scope.externalTitle = "Hide External";
-                getSyncTree($rootScope.connectionDetails.routerid);
+                getSinkTree($rootScope.connectionDetails.routerid);
 
                 $scope.changedSource = function(rootNode){
                     if(rootNode !== ''){
                         $scope.routerfilter = rootNode;
-                        getSyncTree($scope.routerfilter);
+                        getSinkTree($scope.routerfilter);
                         $scope.destinationFilter = "";
                         $scope.distance = 0;
                     }
@@ -96,13 +140,13 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
         var getDataPromise = $interval(function(){
           if(!$scope.responseReady){
               getRouters();
-              if($scope.buttonTitle === "Show Sync Tree"){
+              if($scope.buttonTitle === "Show Sink Tree"){
                   getFullNetwork();
                   console.log("WAITING ON FULL NETWORK 500ms.");
               }
               else {
-                  getSyncTree($rootScope.connectionDetails.routerid);
-                  console.log("WAITING ON SYNC TREE 500ms.");
+                  getSinkTree($rootScope.connectionDetails.routerid);
+                  console.log("WAITING ON Sink tree 500ms.");
               }
           }
         }, 1000);
@@ -183,12 +227,12 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
 
     };
 
-    /* Method to get the sync tree */
-    function getSyncTree(routerId){
+    /* Method to get the sink tree */
+    function getSinkTree(routerId){
 
         var config = {
             method: 'GET',
-            url: 'http://localhost:8080/topology/api/topology/synctree/' + routerId
+            url: 'http://localhost:8080/topology/api/topology/sinktree/' + routerId
         };
 
         $http(config)
@@ -218,7 +262,7 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
               }
             })
             .catch(function(error){
-                console.log("Error retrieving sync tree: " + error);
+                console.log("Error retrieving sink tree: " + error);
             });
 
     };

@@ -18,7 +18,8 @@ router.controller('routersController', function($rootScope, $scope, $http, $loca
 
   /* load JSON with demo data */
   if($rootScope.isDemo){
-      $http.get('../demo/demo_router.json')
+      //$http.get('../demo/demo_router.json')
+      $http.get('demo/demo_router.json')
           .then(function(res){
               $scope.items = res.data;
               $scope.totalRows = res.data.length;
@@ -87,6 +88,9 @@ router.controller('routersController', function($rootScope, $scope, $http, $loca
     else {
       return v1.value.localeCompare(v2.value);
     }
+  }
+  else if(v1.type === 'number' && v2.type === 'number') {
+      return (v1.value < v2.value) ? -1 : 1;
   }
   else {
     return (v1.index < v2.index) ? -1 : 1;
