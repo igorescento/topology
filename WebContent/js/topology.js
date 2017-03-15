@@ -27,7 +27,7 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
             });
 
       //hide some elements that are not available in demo version
-      var sinktree = document.getElementsByClassName('sync-tree');
+      var sinktree = document.getElementsByClassName('sink-tree');
       var externalB = document.getElementsByClassName('button-external');
       for (var i = 0; i < sinktree.length; i += 1) {
           sinktree[i].style.display = 'none';
@@ -55,7 +55,6 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
           }
 
           else {
-              console.log("Displaying sink tree, stopping the timer.");
               $scope.topology = false;
               //$http.get('../demo/demo_topology_sinktree.json')
               $http.get('demo/demo_topology_sinktree.json')
@@ -86,16 +85,14 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
 
                 // call get method every n seconds
                 $scope.Timer = $interval(function() {
-                    console.log(new Date());
-                      $rootScope.connectionDetails.time = new Date().toLocaleString();
-                      getFullNetwork();
-                      getRouters();
-                      $scope.externalTitle = "Hide External";
+                    $rootScope.connectionDetails.time = new Date().toLocaleString();
+                    getFullNetwork();
+                    getRouters();
+                    $scope.externalTitle = "Hide External";
                 }, 25000);
             }
 
             else {
-                console.log("Displaying sink tree, stopping the timer.");
                 $scope.topology = false;
                 $interval.cancel($scope.Timer);
                 $scope.externalTitle = "Hide External";
@@ -134,19 +131,18 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
             }
         }
 
-        //same approach as in switch view where data is polled initially every n seconds
-        console.log("Displaying full network.");
-        //poll data very often after table deletion
+        /**
+        same approach as in switch view where data is polled initially every n seconds
+        poll data very often after table deletion
+        */
         var getDataPromise = $interval(function(){
           if(!$scope.responseReady){
               getRouters();
               if($scope.buttonTitle === "Show Sink Tree"){
                   getFullNetwork();
-                  console.log("WAITING ON FULL NETWORK 500ms.");
               }
               else {
                   getSinkTree($rootScope.connectionDetails.routerid);
-                  console.log("WAITING ON Sink tree 500ms.");
               }
           }
         }, 1000);
@@ -180,7 +176,6 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
         if (angular.isDefined($scope.Timer)) {
             $interval.cancel($scope.Timer);
             $interval.cancel(getDataPromise);
-            console.log("Both timers were cancelled.");
         }
     });
 
@@ -208,18 +203,17 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
                     $scope.background = "#ffffff";
                 }
                 else {
-                  console.log("empty response due to possible overlap in execution time on the backend");
-                  if(d3.select("svg")){
-                      d3.select("svg").remove();
-                      d3.select(".njg-metadata").remove();
-                      d3.select(".njg-overlay").remove();
-                  }
-                  $scope.responseReady = false;
-                  $scope.background = "#fffff0";
+                    if(d3.select("svg")){
+                        d3.select("svg").remove();
+                        d3.select(".njg-metadata").remove();
+                        d3.select(".njg-overlay").remove();
+                    }
+                    $scope.responseReady = false;
+                    $scope.background = "#fffff0";
                 }
             })
             .catch(function(error){
-                console.log("Error retrieving full topology: " + error);
+                console.log("Error retrieving full topology. Please try again." + error);
                 $scope.responseReady = false;
                 $rootScope.isDataLoaded = false;
                 $location.path('/connect');
@@ -244,25 +238,22 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
                       d3.select("svg").remove();
                       d3.select(".njg-metadata").remove();
                   }
-
                   $rootScope.connectionDetails.time = new Date().toLocaleString();
                   processData(response.data, routerId);
                   $scope.responseReady = true;
                   $scope.background = "#ffffff";
               }
               else {
-                console.log("empty response due to possible overlap in execution time on the backend");
-                if(d3.select("svg")){
-                    d3.select("svg").remove();
-                    d3.select(".njg-metadata").remove();
-                }
-
-                $scope.responseReady = false;
-                $scope.background = "#fffff0";
+                  if(d3.select("svg")){
+                      d3.select("svg").remove();
+                      d3.select(".njg-metadata").remove();
+                  }
+                  $scope.responseReady = false;
+                  $scope.background = "#fffff0";
               }
             })
             .catch(function(error){
-                console.log("Error retrieving sink tree: " + error);
+                console.log("Error retrieving sink tree. Please try again." + error);
             });
 
     };
@@ -277,16 +268,14 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
         $http(config)
             .then(function (response) {
                 $scope.routers = response.data;
-                console.log($scope.routers);
                 //initialize the selector for source with router where we're logging in
                 $scope.routerfilter = $rootScope.connectionDetails.routerid;
             })
             .catch(function(error){
                 $scope.responseReady = false;
                 $rootScope.isDataLoaded = false;
-                console.log("ERROR RETRIEVING ROUTER DATA: " + error);
+                console.log("Error retrieving routers info. Please try again." + error);
             });
-
     };
 
     /* Method to get the shortest path between two nodes*/
@@ -323,34 +312,23 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
                   }
                 }
                 else {
-                  console.log("Unsuccesfull. Updating tables.")
+                  console.log("Request unsuccessful due to database update. Try again.");
                 }
             })
             .catch(function(error){
-                console.log("ERROR RETRIEVING SHORTEST PATH DATA: " + error);
+                console.log("Error retrieving shortest path data due to possible overlap with DB update. Please try again. " + error);
             });
 
     };
 });
 
+/* Method to process incoming JSON data to required format */
 function processData(data, rId){
     /* initializing variables */
     var nodes = new Set(),
         newNodes = [],
         links = [],
-        otherLinks = [],
-        newLinks,
-        topology = {
-            "type": "",
-            "label":"",
-            "protocol":"",
-            "version": "",
-            "revision": "",
-            "metric": "",
-            "router_id":"",
-            "nodes": "",
-            "links": ""
-        };
+        topology = {};
 
     data.nodes.forEach(function(node){
         node.color = "default";
@@ -386,8 +364,6 @@ function processData(data, rId){
         charge: -200,
         circleRadius: 12,
         defaultStyle: false,
-        linkClassProperty: "type",
-        nodeClassProperty: "gateway",
         labelDy: "-1.8em"
     });
 }

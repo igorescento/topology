@@ -16,5 +16,4 @@
       $rootScope.isDataLoaded = false;
       $rootScope.isDemo = false;
   })
-
 })(window.app || (window.app = {}));

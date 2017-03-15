@@ -11,7 +11,7 @@ var routesModule = angular.module('routes',['ngRoute']);
               controller  : 'connectionController'
           })
           // route for topology
-          .when('/topology', {
+          .when('/network', {
               templateUrl: 'html/topology.htm',
               controller: 'netgraph',
               resolve: {
@@ -50,7 +50,7 @@ var routesModule = angular.module('routes',['ngRoute']);
           })
 
           // route for the networks page
-          .when('/networks', {
+          .when('/nets', {
               templateUrl : 'html/networks.htm',
               controller: 'networksController',
               resolve: {

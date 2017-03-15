@@ -52,11 +52,11 @@ connectModule.factory('AuthenticationService',
                                 button.disabled = false;
                               });
                             }
-
-                            $location.path('/topology');
+                            /* redirect to topology */
+                            $location.path('/network');
                           })
                           .catch(function(error){
-                              console.log("ERROR RETRIEVING DATA: " + error);
+                              console.log("Error displaying topology. " + error);
                           });
 
                   })
@@ -87,7 +87,7 @@ connectModule.controller('connectionController',
             AuthenticationService.Login($scope.ipaddress, $scope.username, $scope.password, function(response) {
                 if(parseInt(response.status) === 200) {
                     if($rootScope.isDemo){
-                        $location.path('/topology');
+                        $location.path('/network');
                         for(var key in mappings){
                           Array.from(document.getElementsByClassName(key)).forEach(button => {
                             button.disabled = false;

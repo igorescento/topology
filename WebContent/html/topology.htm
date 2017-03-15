@@ -7,7 +7,7 @@
 
         <div class="topology-header-filter" ng-show="responseReady">
 
-          <div class="sync-tree" ng-show="!topology">
+          <div class="sink-tree" ng-show="!topology">
             <select id="routerstopology" ng-model="routerfilter" ng-change="changedSource(routerfilter)">
               <!--<option value="">Select a router</option> -->
               <option ng-repeat="data in routers" value="{{data}}">{{data}}</option>
@@ -47,6 +47,6 @@
     <p><span class="circle switch">&nbsp;</span> Switch</p>
     <p><span class="circle ext">&nbsp;</span> External Route</p>
     <p><span class="link network">&nbsp;</span> Link / Network</p>
-    <p><span class="link synctree">&nbsp;</span> Shortest Path</p>
+    <p><span class="link sinktree">&nbsp;</span> Shortest Path</p>
   </div>
 </div>

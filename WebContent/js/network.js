@@ -24,20 +24,18 @@ network.controller('networksController', function($rootScope, $scope, $http, $lo
 
   /* load JSON with demo data */
   if($rootScope.isDemo){
-      //$http.get('../demo/demo_network.json')
       $http.get('demo/demo_network.json')
           .then(function(res){
               $scope.items = res.data;
               $scope.totalRows = res.data.length;
           })
           .catch(function(error){
-            console.log(error);
+            console.log("Error retrieving networks data. Please try again.");
             $location.path('/connect');
         })
 
   }
   else {
-    console.log("Live Networks table");
     /* config to fetch live data from DB */
     var config = {
         method: 'GET',
@@ -45,11 +43,13 @@ network.controller('networksController', function($rootScope, $scope, $http, $lo
     };
     $http(config)
         .then(function (response) {
-            $scope.items = response.data;
-            $scope.totalRows = response.data.length;
+            if(response.data.length > 0){
+                $scope.items = response.data;
+                $scope.totalRows = response.data.length;
+            }
         })
         .catch(function(error){
-            console.log("ERROR RETRIEVING Net DATA: " + error);
+            console.log("Error retrieving networks data. Please try again. " + error);
             $location.path('/connect');
 
         });

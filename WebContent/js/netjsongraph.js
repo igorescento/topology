@@ -1,5 +1,4 @@
 (function () {
-
     d3._extend = function(defaults, options) {
         var extended = {},
             prop;

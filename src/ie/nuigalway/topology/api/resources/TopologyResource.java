@@ -66,7 +66,7 @@ public class TopologyResource {
 			HashSet<Node> routers = new HashSet<>();
 			List<Edge> edges = new ArrayList<>();
 
-			System.out.println("Routers SIZE: " + rlsa.size() + " NETS size: " + nlsa.size());
+			//System.out.println("Routers SIZE: " + rlsa.size() + " NETS size: " + nlsa.size());
 
 			//loop thru routers and check which network it belongs to
 			for(RouterLsa r: rlsa){
@@ -130,7 +130,7 @@ public class TopologyResource {
 				
 				for(Lsa e : external) {
 					if(r.getId().equals(IPv4Converter.longToIpv4(e.getIdTypePk().getId())) && e.getIdTypePk().getId() != e.getOriginator()){
-						System.out.println("EXTERNAL ROUTER: " + r.getId());
+						//System.out.println("EXTERNAL ROUTER: " + r.getId());
 						//add external routes
 						String externalRoutes = ""; 
 						externalRoutes = lsaDAO.getExternalRoutes(IPv4Converter.ipv4ToLong(r.getId()));
@@ -159,7 +159,7 @@ public class TopologyResource {
 			Graph netGraph = new Graph(l, edges);
 
 			sessionFactory.getCurrentSession().getTransaction().commit();
-			System.out.println("Pulling graph data");
+			//System.out.println("Pulling graph data");
 			return netGraph;
 
 		} catch (HibernateException e) {
@@ -241,7 +241,7 @@ public class TopologyResource {
 		}
 		catch(NullPointerException e){
 			//e.printStackTrace();
-			System.out.println("Null pointer due to overlap with database update.");
+			System.err.println("Null pointer due to overlap with database update.");
 		}
 		return result;
 	}

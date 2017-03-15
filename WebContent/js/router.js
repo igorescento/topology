@@ -18,35 +18,35 @@ router.controller('routersController', function($rootScope, $scope, $http, $loca
 
   /* load JSON with demo data */
   if($rootScope.isDemo){
-      //$http.get('../demo/demo_router.json')
       $http.get('demo/demo_router.json')
           .then(function(res){
               $scope.items = res.data;
               $scope.totalRows = res.data.length;
           })
           .catch(function(error){
-            console.log(error);
+            console.log("Error retrieving demo data.");
             $location.path('/connect');
         })
 
   }
   else {
-    console.log("Live Router table");
-    /* config to fetch live data from DB */
-    var config = {
-        method: 'GET',
-        url: 'http://localhost:8080/topology/api/type/router'
-    };
-    $http(config)
-        .then(function (response) {
-            $scope.items = response.data;
-            $scope.totalRows = response.data.length;
-        })
-        .catch(function(error){
-            console.log("ERROR RETRIEVING ROUTER DATA: " + error);
-            $location.path('/connect');
+      /* config to fetch live data from DB */
+      var config = {
+          method: 'GET',
+          url: 'http://localhost:8080/topology/api/type/router'
+      };
+      $http(config)
+          .then(function (response) {
+              if(response.data.length > 0){
+                  $scope.items = response.data;
+                  $scope.totalRows = response.data.length;
+              }
+          })
+          .catch(function(error){
+              console.log("ERROR RETRIEVING ROUTER DATA: " + error);
+              $location.path('/connect');
 
-        });
+          });
   };
 
   /* own comparator to compare each octet of ip address in order to sort them correctly in the table */

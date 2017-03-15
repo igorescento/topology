@@ -13,6 +13,7 @@ import java.util.TimerTask;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -22,6 +23,10 @@ import org.apache.commons.net.util.SubnetUtils.SubnetInfo;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 
+import javax.inject.Singleton;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -44,6 +49,7 @@ import ie.nuigalway.topology.util.database.HibernateUtil;
 import me.legrange.mikrotik.ApiConnection;
 import me.legrange.mikrotik.MikrotikApiException;
 
+@Singleton
 @Path("mikrotik")
 public class MikrotikResource {
 
@@ -53,12 +59,20 @@ public class MikrotikResource {
 	private LsaDAO lsaDAOHibernate;
 	private RouterLsaDAO routerLsaDAO;
 	private NetworkLsaDAO netLsaDAO;
+	private Timer timer;
+	private boolean isRunning;
+	private boolean sameIp;
+	private ArrayList<String> address;
 
 	{
 		this.sessionFactory = HibernateUtil.getSessionFactory();
 		this.lsaDAOHibernate = new LsaDAO(sessionFactory);
 		this.routerLsaDAO = new RouterLsaDAO(sessionFactory);
 		this.netLsaDAO = new NetworkLsaDAO(sessionFactory);
+		this.timer = new Timer("Refresh");
+		this.isRunning = false;
+		this.sameIp = false;
+		this.address = new ArrayList<>();
 	}
 
 	/**
@@ -67,7 +81,6 @@ public class MikrotikResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response retrieveLsa(ConnDataModel data){
-
 		//DEMO_TO_WORK_WITH_LSA_EXPORT_FROM_LIVE_ROUTER-----------------------
 		/*boolean demo = true;
 		if(demo){
@@ -90,30 +103,49 @@ public class MikrotikResource {
 		}*/
 		//DEMO_END-------------------------------------------------------------
 
-		Timer timer = new Timer();
-		//timer utility to execute the code after successful login and repeatedly fetch all the data
-		System.out.println("TIMER RUNNNING " + timer.toString());
+		//keep list of logged in ip addresses to see if we are connecting to same device or accessing new device
+		address.add(data.getIpaddress());
+		if(isRunning){
+			sameIp = data.getIpaddress().equals(address.get(address.size()-2));
+		}
 
-		//login to router and retrieve LSA table
+		//login to router and retrieve LSA table and repeat every n seconds
 		try {
-			System.out.println("Connecting to router.");
 			ApiConnection con = ApiConnection.connect(data.getIpaddress());
-			con.login(data.getUsername(), data.getPassword());		
+			con.login(data.getUsername(), data.getPassword());
 
-			timer.scheduleAtFixedRate(new TimerTask() {
+			TimerTask tt = new TimerTask() {
 				public void run()
-				{
-					System.out.println("Timer runnning. " + data.getIpaddress() + " @ " + new Date());
+				{	
+					System.out.println("Timer " + timer.toString() + " runnning. " + data.getIpaddress() + " @ " + new Date());
 
-					//deleting all tables
-					System.out.println("Deleting old table. New data inserted.");
+					//deleting old data, inserting new
 					deleteAllTables();
 
 					updateLsaTable(con);
 					updateNetsTable();
 					updateRoutersTable();
 				}
-			}, 0, 300000);
+			};
+
+			//making sure that only one timer runs at any point in time
+			synchronized (timer) {
+				if (isRunning) {
+					if(sameIp){
+						System.out.println("Timer already running with same task.");
+					}
+					else {
+						timer.cancel();
+						timer = new Timer("Refresh");
+						timer.scheduleAtFixedRate(tt, 0, 15000);
+						System.out.println("Timer cancelled, new one scheduled");
+					}
+				} else {
+					timer.scheduleAtFixedRate(tt, 0, 15000);
+					isRunning = true;
+					System.out.println("New timer scheduled");
+				}
+			}
 
 			return Response.ok().build();
 

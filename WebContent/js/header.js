@@ -3,10 +3,10 @@ var headerModule = angular.module('header',['ngRoute']);
 /* button to link mappings */
 var mappings = {
   "button-connect": "connect",
-  "button-topology": "topology",
+  "button-topology": "network",
   "button-lsa": "lsa",
   "button-router": "routers",
-  "button-network": "networks"
+  "button-network": "nets"
 };
 
 /* live time controller */
