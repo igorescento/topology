@@ -9,15 +9,16 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
     $scope.externalTitle = "Hide External";
     $scope.responseReady = false;
     $scope.topology = true;
+    $scope.demoData = null;
 
     /* load JSON with demo data */
     if($rootScope.isDemo){
         $scope.background = "#ffffff";
         $scope.responseReady = true;
 
-        //$http.get('../demo/demo_topology.json')
         $http.get('demo/demo_topology.json')
             .then(function(res){
+                $scope.demoData = JSON.parse(JSON.stringify(res.data));
                 if(d3.select("svg")){
                     d3.select("svg").remove();
                     d3.select(".njg-metadata").remove();
@@ -27,11 +28,19 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
             });
 
       //hide some elements that are not available in demo version
-      var sinktree = document.getElementsByClassName('sink-tree');
+      //var sinktree = document.getElementsByClassName('sink-tree');
       var externalB = document.getElementsByClassName('button-external');
-      for (var i = 0; i < sinktree.length; i += 1) {
+      /*for (var i = 0; i < sinktree.length; i += 1) {
           sinktree[i].style.display = 'none';
-      }
+      }*/
+
+      //populate shortest path selectors
+      $http.get('demo/distinct_routers.json')
+          .then(function(res){
+              $scope.routers = res.data;
+          });
+      $scope.routerfilter = "10.99.0.148";
+
       for (var i = 0; i < externalB.length; i += 1) {
           externalB[i].style.display = 'none';
       }
@@ -42,7 +51,7 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
 
           //switch view active - loading topology
           if($scope.buttonTitle === "Show Sink Tree"){
-              //$http.get('../demo/demo_topology.json')
+              $scope.topology = true;
               $http.get('demo/demo_topology.json')
                   .then(function(res){
                       if(d3.select("svg")){
@@ -56,7 +65,6 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
 
           else {
               $scope.topology = false;
-              //$http.get('../demo/demo_topology_sinktree.json')
               $http.get('demo/demo_topology_sinktree.json')
                   .then(function(res){
                       if(d3.select("svg")){
@@ -66,6 +74,37 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
                       }
                       processData(res.data, "10.99.0.148");
                   });
+
+              $scope.changedSource = function(rootNode){
+                  if(rootNode !== ''){
+                      $scope.routerfilter = rootNode;
+                      getDemoTree($scope.routerfilter, $scope.demoData);
+                      $scope.destinationFilter = "";
+                      $scope.distance = 0;
+                  }
+              }
+
+              //highlight shortest path when destination selected
+              $scope.changedDestination = function(destination){
+                  if(destination !== '' && $scope.routerfilter){
+                      if(destination === $scope.routerfilter){
+                          console.log("Same router selected.");
+                          var links = d3.selectAll(".njg-link")[0];
+                          for(var j = 0; j < links.length; j++) {
+                              links[j].style.stroke = "#999";
+                          }
+                          $scope.distance = 0;
+                      }
+                      else {
+                          //clear each time destination is changed
+                          var links = d3.selectAll(".njg-link")[0];
+                          for(var j = 0; j < links.length; j++) {
+                              links[j].style.stroke = "#999";
+                          }
+                          getDemoPath($scope.routerfilter, destination, $scope.demoData);
+                      }
+                  }
+              }
           }
       }
     }
@@ -284,6 +323,88 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
         var config = {
             method: 'GET',
             url: 'http://localhost:8080/topology/api/topology/shortestpath/' + from + '/' + to
+        };
+        $http(config)
+            .then(function (response) {
+                var resp, routers, distances;
+
+                if(Object.keys(response.data[1]).length){
+                  resp = response.data[1];
+
+                  routers = Object.keys(resp).sort(function(a,b){ return resp[a]-resp[b] });
+
+                  distances = response.data[0];
+                  $scope.distance = distances[to];
+
+                  for(var i = 0; i < routers.length - 1; i++){
+                      var linkA = routers[i].replace(/\./g, '-') + '_' + routers[i+1].replace(/\./g, '-');
+                      var linkB = routers[i+1].replace(/\./g, '-') + '_' + routers[i].replace(/\./g, '-');
+
+                      var el = document.getElementsByClassName(linkA);
+                      var el2 = document.getElementsByClassName(linkB);
+                      if(el.length > 0) {
+                          el[0].style.stroke = '#f90808';
+                      }
+                      if(el2.length > 0){
+                          el2[0].style.stroke = '#f90808';
+                      }
+                  }
+                }
+                else {
+                  console.log("Request unsuccessful due to database update. Try again.");
+                }
+            })
+            .catch(function(error){
+                console.log("Error retrieving shortest path data due to possible overlap with DB update. Please try again. " + error);
+            });
+
+    };
+
+    //mehod to return DEMO sink tree
+    function getDemoTree(routerId, data){
+
+        var config = {
+            method: 'POST',
+            url: 'http://localhost:8080/topology/api/topology/demotree/' + routerId,
+            headers: {'Content-Type': 'application/json'},
+            data: data
+        };
+
+        $http(config)
+            .then(function (response) {
+              /* remove the svg element and create new graph */
+              if(response.data.nodes.length !== 0 || response.data.edges.length !== 0){
+                  /* remove the svg element and create new graph */
+                  if(d3.select("svg")){
+                      d3.select("svg").remove();
+                      d3.select(".njg-metadata").remove();
+                  }
+                  $rootScope.connectionDetails.time = new Date().toLocaleString();
+                  processData(response.data, routerId);
+                  $scope.responseReady = true;
+                  $scope.background = "#ffffff";
+              }
+              else {
+                  if(d3.select("svg")){
+                      d3.select("svg").remove();
+                      d3.select(".njg-metadata").remove();
+                  }
+                  $scope.responseReady = false;
+                  $scope.background = "#fffff0";
+              }
+            })
+            .catch(function(error){
+                console.log("Error retrieving sink tree. Please try again." + error);
+            });
+
+    };
+
+    /* Method to get the DEMO shortest path between two nodes*/
+    function getDemoPath(from, to, data){
+        var config = {
+            method: 'POST',
+            url: 'http://localhost:8080/topology/api/topology/demopath/' + from + '/' + to,
+            data: data
         };
         $http(config)
             .then(function (response) {

@@ -33,14 +33,14 @@ public class BrowserFilter implements Filter {
             HttpServletRequest httpRequest = (HttpServletRequest) request;
             HttpServletResponse httpResponse = (HttpServletResponse)response;
             
-            /*httpResponse.setHeader("Cache-Control","no-cache");
+            httpResponse.setHeader("Cache-Control","no-cache");
             httpResponse.setHeader("Pragma","no-cache");
             httpResponse.setDateHeader ("Expires", 0);
             
             httpResponse.setHeader("Access-Control-Allow-Origin", "*");
             httpResponse.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
             httpResponse.setHeader("Access-Control-Max-Age", "3600");
-            httpResponse.setHeader("Access-Control-Allow-Headers", "x-requested-with");*/
+            httpResponse.setHeader("Access-Control-Allow-Headers", "x-requested-with");
                
             if (isUnsupportedBrowser(httpRequest)) {
                 request.getRequestDispatcher("unsupported-browser.jsp").forward(request, response);

@@ -13,7 +13,6 @@ import java.util.TimerTask;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -24,9 +23,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 
 import javax.inject.Singleton;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -82,7 +78,8 @@ public class MikrotikResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response retrieveLsa(ConnDataModel data){
 		//DEMO_TO_WORK_WITH_LSA_EXPORT_FROM_LIVE_ROUTER-----------------------
-		/*boolean demo = true;
+		/*
+		boolean demo = true;
 		if(demo){
 
 			try{
@@ -100,7 +97,8 @@ public class MikrotikResource {
 		}
 
 		else {
-		}*/
+		}
+		*/
 		//DEMO_END-------------------------------------------------------------
 
 		//keep list of logged in ip addresses to see if we are connecting to same device or accessing new device
@@ -151,7 +149,6 @@ public class MikrotikResource {
 
 		} catch (MikrotikApiException e) {
 			e.printStackTrace();
-			timer.cancel();
 			return Response.status(500).entity(e.getMessage()).build();
 		}
 

@@ -1,13 +1,24 @@
 package ie.nuigalway.topology.api.model.dijkstra;
 
-public class Edge  {
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-	private final String id;
-	private final Node source;
-	private final Node destination;
-	private final int metric;
-	private final String type;
+public class Edge {
 
+	@JsonProperty
+	private String id;
+	
+	@JsonProperty
+	private Node source;
+	
+	@JsonProperty
+	private Node destination;
+	
+	@JsonProperty
+	private int metric;
+	
+	@JsonProperty
+	private String type;
+	
 	public Edge(String i, Node s, Node d, int m, String t) {
 		this.id = i;
 		this.source = s;
@@ -15,10 +26,13 @@ public class Edge  {
 		this.metric = m;
 		this.type = t;
 	}
-
+	
+	public Edge() {};
+	
 	public String getId() {
 		return id;
 	}
+	
 	public Node getDestination() {
 		return destination;
 	}
@@ -37,6 +51,6 @@ public class Edge  {
 
 	@Override
 	public String toString() {
-		return source.getName() + " " + destination.getName();
+		return source.getLabel() + " " + destination.getLabel();
 	}
 }

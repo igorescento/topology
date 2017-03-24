@@ -70,9 +70,8 @@ public class Dijkstra {
 		while (iterV.hasNext()) {
 			Edge e = iterV.next();
 
-			if(prior.get(e.getSource()) != null){
+			if(prior.get(e.getSource()) != null && prior.get(e.getDestination()) != null){
 				if(prior.get(e.getSource()).equals(e.getDestination()) || (prior.get(e.getDestination()).equals(e.getSource()))) {
-
 				}
 				else {
 					iterV.remove();

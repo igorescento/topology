@@ -7,7 +7,9 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -171,9 +173,8 @@ public class TopologyResource {
 	}
 
 	/**
-	 * Method to return shortest path from / to a specific node
+	 * Method to generate a sink tree for selected node
 	 */
-
 	@GET
 	@Path("sinktree/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -233,7 +234,84 @@ public class TopologyResource {
 			}*/
 
 			for (Node node : path) {
-				hops.put(node.getName(), hopNum);
+				hops.put(node.getLabel(), hopNum);
+				hopNum++;
+			}
+
+			result.add(hops);
+		}
+		catch(NullPointerException e){
+			//e.printStackTrace();
+			System.err.println("Null pointer due to overlap with database update.");
+		}
+		return result;
+	}
+	
+	/**
+	 * Method to generate a DEMO sink tree for selected node
+	 */
+	@POST
+	@Path("demotree/{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Graph getDemoTree(@PathParam("id") String id, Graph data){
+		
+		Graph syncTree = null;
+		Node router = null;
+
+		for(Node n : data.getNodes()){
+			if(id.equals(n.getId())){
+				router = n;
+				break;
+			}
+		}
+
+		Dijkstra algo = new Dijkstra(data);
+		algo.run(router);
+		syncTree = algo.getSyncTree(data);
+
+		return syncTree;
+	}
+
+	/**
+	 * Method to return DEMO shortest path from / to a specific node
+	 */
+	@POST
+	@Path("demopath/{from}/{to}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<HashMap<String, Integer>> getDemoPath(@PathParam("from") String from, @PathParam("to") String to, Graph data){
+
+		//List<String> listNodes = new ArrayList<>();
+		HashMap<Node, Integer> distances = new HashMap<>();
+		HashMap<String, Integer> d = new HashMap<>();
+		HashMap<String, Integer> hops = new HashMap<>();
+		List<HashMap<String, Integer>> result = new ArrayList<>();
+
+		Node n = new Node(from, from, "router");
+		Node n2 = new Node(to, to, "router");
+		Integer hopNum = 0;
+
+		try {
+			Dijkstra algo = new Dijkstra(data);
+			algo.run(n);
+			distances = algo.getDistance();
+
+			for (HashMap.Entry<Node, Integer> node : distances.entrySet()) {
+				d.put(node.getKey().getId(), node.getValue());
+
+			}
+
+			result.add(d);
+
+			LinkedList<Node> path = algo.getPath(n2);
+
+			/*for (Node node : path) {
+				listNodes.add(node.getName());
+			}*/
+
+			for (Node node : path) {
+				hops.put(node.getLabel(), hopNum);
 				hopNum++;
 			}
 

@@ -1,10 +1,19 @@
 package ie.nuigalway.topology.api.model.dijkstra;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Node {
 
+	@JsonProperty
 	private String id;
+	
+	@JsonProperty
 	private String label;
+	
+	@JsonProperty
 	private String type;
+	
+	@JsonProperty
 	private String interf;
 
 	public Node(String i, String l, String t) {
@@ -12,22 +21,21 @@ public class Node {
 		this.label = l;
 		this.type = t;
 	}
+	
+	public Node(){};
 
 	public String getId() {
 		return id;
 	}
-
-	public String getName() {
+	
+	public String getLabel() {
 		return label;
 	}
 
 	public String getType() {
 		return type;
 	}
-	
-	public String getLabel() {
-		return label;
-	}
+
 
 	public String getInterf() {
 		return interf;
