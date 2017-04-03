@@ -24,6 +24,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.StreamingOutput;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -39,7 +40,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.util.IOUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 
@@ -238,7 +238,8 @@ public class ExportReportResource {
 	 * 
 	 * @return
 	 */
-	@GET @Path("download/{id}")
+	@GET
+	@Path("download/{id}")
 	@Produces("application/xls")
 	public Response downloadMRReport(@Context HttpServletRequest request, @PathParam("id") String id) {
 
@@ -252,6 +253,24 @@ public class ExportReportResource {
 
 		return workbookToResponse(workbook, "report.xls");
 	}
+	
+	/**
+	 * Download the report that was generated last for this user.
+	 * 
+	 * @return
+	 */
+	@GET
+	@Path("downloadsvg")
+	@Produces("application/xml")
+	public Response downloadTopologySvg(@Context HttpServletRequest request) {
+		
+		File f = new File("topology.svg");
+		ResponseBuilder response;
+		response = Response.ok((Object) f);
+		response.header("content-disposition","attachment; filename = topology.svg");
+		
+		return response.build();
+	}
 
 	@POST
 	@Path("report")
@@ -259,10 +278,12 @@ public class ExportReportResource {
 	public String generateGeneralEpicReport(String svg) {
 		
 		try {
-			//create svg file
-			BufferedWriter out = new BufferedWriter(new FileWriter("topology.svg"));
-			out.write(svg);
-			out.close();
+			//create svg
+			if(svg.trim().length() > 0){
+				BufferedWriter out = new BufferedWriter(new FileWriter("topology.svg"));
+				out.write(svg);
+				out.close();
+			}
 			
 			List<LsaModel> lsaModelList = new ArrayList<LsaModel>();
 			List<NetworkLsaModel> netLsaModelList = new ArrayList<>();

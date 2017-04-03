@@ -203,6 +203,12 @@ public class ExportInputUtil {
 		inputCell.setValue("Broadcast Address");
 		
 		listInputCellHeaders.add(inputCell);
+		
+		inputCell = new InputCell();
+		inputCell.setAttribute("ipavailable");
+		inputCell.setValue("IPs Available");
+		
+		listInputCellHeaders.add(inputCell);
 
 		return listInputCellHeaders;
 	}
@@ -268,6 +274,13 @@ public class ExportInputUtil {
 		inputCell.setValue(lsaModel.getBroadcastaddr());
 
 		listInputCell.add(inputCell);
+		
+
+		inputCell = new InputCell();
+		inputCell.setAttribute("ipavailable");
+		inputCell.setValue(String.valueOf(lsaModel.getIpavailable()));
+
+		listInputCell.add(inputCell);
 
 		return listInputCell;
 	}
@@ -294,13 +307,13 @@ public class ExportInputUtil {
 
 		inputCell = new InputCell();
 		inputCell.setAttribute("bodyid");
-		inputCell.setValue("Body ID ( )");
+		inputCell.setValue("Body ID (DR's Interface)");
 
 		listInputCellHeaders.add(inputCell);
 
 		inputCell = new InputCell();
 		inputCell.setAttribute("data");
-		inputCell.setValue("Data ( )");
+		inputCell.setValue("Data (Router's Interface)");
 
 		listInputCellHeaders.add(inputCell);
 

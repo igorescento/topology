@@ -78,9 +78,8 @@ public class MikrotikResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response retrieveLsa(ConnDataModel data){
 		//DEMO_TO_WORK_WITH_LSA_EXPORT_FROM_LIVE_ROUTER-----------------------
-		/*
-		boolean demo = true;
-		if(demo){
+
+		if(data.getIpaddress().equals("10.8.129.6")){
 
 			try{
 				List<String> fromFile = new ArrayList<>();
@@ -97,59 +96,60 @@ public class MikrotikResource {
 		}
 
 		else {
-		}
-		*/
-		//DEMO_END-------------------------------------------------------------
 
-		//keep list of logged in ip addresses to see if we are connecting to same device or accessing new device
-		address.add(data.getIpaddress());
-		if(isRunning){
-			sameIp = data.getIpaddress().equals(address.get(address.size()-2));
-		}
 
-		//login to router and retrieve LSA table and repeat every n seconds
-		try {
-			ApiConnection con = ApiConnection.connect(data.getIpaddress());
-			con.login(data.getUsername(), data.getPassword());
+			//DEMO_END-------------------------------------------------------------
 
-			TimerTask tt = new TimerTask() {
-				public void run()
-				{	
-					System.out.println("Timer " + timer.toString() + " runnning. " + data.getIpaddress() + " @ " + new Date());
-
-					//deleting old data, inserting new
-					deleteAllTables();
-
-					updateLsaTable(con);
-					updateNetsTable();
-					updateRoutersTable();
-				}
-			};
-
-			//making sure that only one timer runs at any point in time
-			synchronized (timer) {
-				if (isRunning) {
-					if(sameIp){
-						System.out.println("Timer already running with same task.");
-					}
-					else {
-						timer.cancel();
-						timer = new Timer("Refresh");
-						timer.scheduleAtFixedRate(tt, 0, 15000);
-						System.out.println("Timer cancelled, new one scheduled");
-					}
-				} else {
-					timer.scheduleAtFixedRate(tt, 0, 15000);
-					isRunning = true;
-					System.out.println("New timer scheduled");
-				}
+			//keep list of logged in ip addresses to see if we are connecting to same device or accessing new device
+			address.add(data.getIpaddress());
+			if(isRunning){
+				sameIp = data.getIpaddress().equals(address.get(address.size()-2));
 			}
 
-			return Response.ok().build();
+			//login to router and retrieve LSA table and repeat every n seconds
+			try {
+				ApiConnection con = ApiConnection.connect(data.getIpaddress());
+				con.login(data.getUsername(), data.getPassword());
 
-		} catch (MikrotikApiException e) {
-			e.printStackTrace();
-			return Response.status(500).entity(e.getMessage()).build();
+				TimerTask tt = new TimerTask() {
+					public void run()
+					{	
+						System.out.println("Timer " + timer.toString() + " runnning. " + data.getIpaddress() + " @ " + new Date());
+
+						//deleting old data, inserting new
+						deleteAllTables();
+
+						updateLsaTable(con);
+						updateNetsTable();
+						updateRoutersTable();
+					}
+				};
+
+				//making sure that only one timer runs at any point in time
+				synchronized (timer) {
+					if (isRunning) {
+						if(sameIp){
+							System.out.println("Timer already running with same task.");
+						}
+						else {
+							timer.cancel();
+							timer = new Timer("Refresh");
+							timer.scheduleAtFixedRate(tt, 0, 15000);
+							System.out.println("Timer cancelled, new one scheduled");
+						}
+					} else {
+						timer.scheduleAtFixedRate(tt, 0, 60000);
+						isRunning = true;
+						System.out.println("New timer scheduled.");
+					}
+				}
+
+				return Response.ok().build();
+
+			} catch (MikrotikApiException e) {
+				e.printStackTrace();
+				return Response.status(500).entity(e.getMessage()).build();
+			}
 		}
 
 	}
@@ -164,23 +164,28 @@ public class MikrotikResource {
 
 		String routerId = null;
 
-		try {
-			ApiConnection con = ApiConnection.connect(data.getIpaddress());
-			con.login(data.getUsername(), data.getPassword());
+		if(data.getIpaddress().equals("10.8.129.6")){
+			return "10.99.0.148";
+		}
+		else {
+			try {
+				ApiConnection con = ApiConnection.connect(data.getIpaddress());
+				con.login(data.getUsername(), data.getPassword());
 
-			List<Map<String, String>> rs = con.execute("/ip/address/print");
+				List<Map<String, String>> rs = con.execute("/ip/address/print");
 
-			for (Map<String,String> r : rs) {
-				if(r.get("interface").equals("loopback")){
-					routerId = r.get("address").split("/")[0];
+				for (Map<String,String> r : rs) {
+					if(r.get("interface").equals("loopback")){
+						routerId = r.get("address").split("/")[0];
+					}
 				}
+
+				return routerId;
+
+			} catch (MikrotikApiException e) {
+				e.printStackTrace();
+				return routerId;
 			}
-
-			return routerId;
-
-		} catch (MikrotikApiException e) {
-			e.printStackTrace();
-			return routerId;
 		}
 	}
 	/**
