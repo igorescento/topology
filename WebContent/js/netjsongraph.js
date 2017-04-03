@@ -184,7 +184,7 @@
                     if(n.interf){
                         var inter = n.interf.split(",");
                         for(var i in inter){
-                            html += "<p>&emsp;" + inter[i] + "</p>"
+                            html += "<p>&emsp;" + inter[i] + "</p>";
                         }
                     }
                 }
@@ -193,9 +193,9 @@
                     html += "<p><b>External Routes: </b></p>";
 
                     if(n.interf){
-                        var inter = n.interf.split(",");
-                        for(var i in inter){
-                            html += "<p>&emsp;" + inter[i] + "</p>"
+                        var intrf = n.interf.split(",");
+                        for(var j in intrf){
+                            html += "<p>&emsp;" + intrf[j] + "</p>";
                         }
                     }
                 }
@@ -383,7 +383,7 @@
                                      return baseClass +  " " + "color-" + node.color;
                                  })
                                  .attr("r", opts.circleRadius)
-                                 .attr("id", function(d, i) { return d.type })
+                                 .attr("id", function(d, i) { return d.type; })
                                  .on("click", opts.onClickNode)
                                  .call(drag),
 

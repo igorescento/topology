@@ -1,4 +1,4 @@
-'use strict';
+/*jshint esversion: 6 */
 
 var connectModule = angular.module('connect', []);
 
@@ -66,7 +66,7 @@ connectModule.factory('AuthenticationService',
           }
         };
         return service;
-    }])
+    }]);
 
 /* connection controller */
 connectModule.controller('connectionController',
@@ -79,7 +79,7 @@ connectModule.controller('connectionController',
               Array.from(document.getElementsByClassName(key)).forEach(button => {
                 button.disabled = true;
               });
-            };
+            }
         }
 
         $scope.login = function () {

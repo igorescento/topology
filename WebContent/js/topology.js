@@ -1,4 +1,4 @@
-"use strict";
+/*jshint esversion: 6 */
 
 var netModule = angular.module('topology', []);
 
@@ -82,14 +82,15 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
                       $scope.destinationFilter = "";
                       $scope.distance = 0;
                   }
-              }
+              };
 
               //highlight shortest path when destination selected
               $scope.changedDestination = function(destination){
+                  var links;
                   if(destination !== '' && $scope.routerfilter){
                       if(destination === $scope.routerfilter){
                           console.log("Same router selected.");
-                          var links = d3.selectAll(".njg-link")[0];
+                          links = d3.selectAll(".njg-link")[0];
                           for(var j = 0; j < links.length; j++) {
                               links[j].style.stroke = "#999";
                           }
@@ -97,16 +98,16 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
                       }
                       else {
                           //clear each time destination is changed
-                          var links = d3.selectAll(".njg-link")[0];
-                          for(var j = 0; j < links.length; j++) {
-                              links[j].style.stroke = "#999";
+                          links = d3.selectAll(".njg-link")[0];
+                          for(var k = 0; k < links.length; k++) {
+                              links[k].style.stroke = "#999";
                           }
                           getDemoPath($scope.routerfilter, destination, $scope.demoData);
                       }
                   }
-              }
+              };
           }
-      }
+      };
     }
     /* demo end */
 
@@ -129,8 +130,8 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
                     getFullNetwork();
                     getRouters();
                     $scope.externalTitle = "Hide External";
-                    console.log("timer on start 15sec");
-                }, 15000);
+                    console.log("timer on start 60sec");
+                }, 60000);
             }
 
             else {
@@ -146,31 +147,32 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
                         $scope.destinationFilter = "";
                         $scope.distance = 0;
                     }
-                }
+                };
 
                 //highlight shortest path when destination selected
                 $scope.changedDestination = function(destination){
                     if(destination !== '' && $scope.routerfilter){
+                        var links;
                         if(destination === $scope.routerfilter){
                             console.log("Same router selected.");
-                            var links = d3.selectAll(".njg-link")[0];
-                            for(var j = 0; j < links.length; j++) {
-                                links[j].style.stroke = "#999";
+                            links = d3.selectAll(".njg-link")[0];
+                            for(var k = 0; k < links.length; k++) {
+                                links[k].style.stroke = "#999";
                             }
                             $scope.distance = 0;
                         }
                         else {
                             //clear each time destination is changed
-                            var links = d3.selectAll(".njg-link")[0];
-                            for(var j = 0; j < links.length; j++) {
-                                links[j].style.stroke = "#999";
+                            links = d3.selectAll(".njg-link")[0];
+                            for(var l = 0; l < links.length; l++) {
+                                links[l].style.stroke = "#999";
                             }
                             getShortestPath($scope.routerfilter, destination);
                         }
                     }
-                }
+                };
             }
-        }
+        };
 
         /**
         same approach as in switch view where data is polled initially every n seconds
@@ -192,19 +194,19 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
         $scope.Timer = $interval(function() {
             getRouters();
             getFullNetwork();
-            console.log("second timer 10s");
-        }, 10000);
+            console.log("second timer 60s");
+        }, 60000);
 
         /* Show / Hide external networks - nodes and links included */
         $scope.ShowExternal = function() {
             var boolVal, externals;
-            
+
             externals = document.getElementsByClassName("external");
             $scope.externalTitle = $scope.externalTitle === "Hide External" ? "Show External" : "Hide External";
             boolVal = $scope.externalTitle === "Hide External" ? true : false;
 
             showExternals(externals, boolVal);
-        }
+        };
 
     }
 
@@ -219,15 +221,14 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
     /* Show external function */
     function showExternals(element, boolVal) {
         if(!boolVal){
-          console.log("A");
             Array.from(element).forEach(v => {
                 v.style.display = "none";
-            })
+            });
         }
         else {
             Array.from(element).forEach(v => {
                 v.style.display = "inherit";
-            })
+            });
         }
     }
 
@@ -275,7 +276,7 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
                 //$location.path('/connect');
             });
 
-    };
+    }
 
     /* Method to get the sink tree */
     function getSinkTree(routerId){
@@ -312,7 +313,7 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
                 console.log("Error retrieving sink tree. Please try again." + error);
             });
 
-    };
+    }
 
     /* Method to get the routers for selector*/
     function getRouters(){
@@ -332,7 +333,7 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
                 $rootScope.isDataLoaded = false;
                 console.log("Error retrieving routers info. Please try again." + error);
             });
-    };
+    }
 
     /* Method to get the shortest path between two nodes*/
     function getShortestPath(from, to){
@@ -348,7 +349,7 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
                 if(Object.keys(response.data[1]).length){
                   resp = response.data[1];
 
-                  routers = Object.keys(resp).sort(function(a,b){ return resp[a]-resp[b] });
+                  routers = Object.keys(resp).sort(function(a,b){ return resp[a]-resp[b]; });
 
                   distances = response.data[0];
                   $scope.distance = distances[to];
@@ -375,7 +376,7 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
                 console.log("Error retrieving shortest path data due to possible overlap with DB update. Please try again. " + error);
             });
 
-    };
+    }
 
     //mehod to return DEMO sink tree
     function getDemoTree(routerId, data){
@@ -414,7 +415,7 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
                 console.log("Error retrieving sink tree. Please try again." + error);
             });
 
-    };
+    }
 
     /* Method to get the DEMO shortest path between two nodes*/
     function getDemoPath(from, to, data){
@@ -430,7 +431,7 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
                 if(Object.keys(response.data[1]).length){
                   resp = response.data[1];
 
-                  routers = Object.keys(resp).sort(function(a,b){ return resp[a]-resp[b] });
+                  routers = Object.keys(resp).sort(function(a,b){ return resp[a]-resp[b]; });
 
                   distances = response.data[0];
                   $scope.distance = distances[to];
@@ -457,7 +458,7 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
                 console.log("Error retrieving shortest path data due to possible overlap with DB update. Please try again. " + error);
             });
 
-    };
+    }
 });
 
 /* Method to process incoming JSON data to required format */
@@ -473,18 +474,21 @@ function processData(data, rId){
         if(node.id === rId){
             node.color = "green";
         }
-    })
+    });
 
     newNodes = data.nodes;
     data.edges.forEach(function(row){
         links.push({ "networkid": row.id, "netmask": row.mask, "source": row.source.id, "target": row.destination.id, "cost": row.metric, "deleted": false, "type": row.type});
-    })
+    });
 
     /* check for same nodes / targets - need to be removed*/
     for(var i = 0; i < links.length; i++){
         for(var j = i + 1; j < links.length; j++){
             if(links[i].source === links[j].target){
                 if(links[i].target === links[j].source){
+                  if(links[i].cost !== links[j].cost){
+                    links[i].cost = links[i].cost + "/" + links[j].cost;
+                  }
                     links[j].deleted = true;
                 }
             }

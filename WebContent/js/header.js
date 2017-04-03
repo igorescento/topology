@@ -12,30 +12,58 @@ var mappings = {
 
 /* live time controller */
 headerModule.controller('TimeCtrl', function($scope, $interval) {
-  var tick = function() {
-    $scope.clock = Date.now();
-  };
+    var tick = function() {
+      $scope.clock = Date.now();
+    };
 
-  tick();
-  $interval(tick, 1000);
+    tick();
+    $interval(tick, 1000);
 });
 
 /* button click controller to display html */
-headerModule.controller('ButtonClick', function ($scope, $location, $http, $window) {
+headerModule.controller('ButtonClick', function ($scope, $rootScope, $location, $http, $window) {
   $scope.ButtonClick = function (value) {
-    var found = false;
-    var tempMapping;
 
-    for(var key in mappings){
+    if(value.currentTarget.className === "button-export"){
+        $scope.svg = d3.select("svg").node() === null ? null : d3.select("svg").node();
+        //var svg = d3.select("svg").node();
+
+        /* config to fetch live data from DB */
+        var config = {
+            method: 'POST',
+            url: 'http://localhost:8080/topology/api/generate/report',
+            headers: {
+                'Content-Type': 'text/plain'
+            },
+            data: $scope.svg === null ? null : getSVGString($scope.svg)
+        };
+        $http(config)
+            .then(function (response) {
+                download(response.data);
+            })
+            .catch(function(error){
+                console.log("Error retrieving networks data. Please try again. " + error);
+            });
+    }
+
+    else {
+        for(var key in mappings){
+            if(value.currentTarget.className === key){
+                $location.url(mappings[key]);
+            }
+        }
+    }
+
+    /*for(var key in mappings){
       if(value.currentTarget.className === key){
         found = true;
         if(mappings[key] === "export"){
             console.log("Export");
             var svg = d3.select("svg").node();
-            var svgString = getSVGString(svg);
+            var svgString = getSVGString(svg);*/
 
             /* config to fetch live data from DB */
-            var config = {
+            /*var config = {
                 method: 'POST',
                 url: 'http://localhost:8080/topology/api/generate/report',
                 headers: {
@@ -56,21 +84,25 @@ headerModule.controller('ButtonClick', function ($scope, $location, $http, $wind
             $location.url(mappings[key]);
         }
       }
-    }
-
-    if(!found){
-      $location.url("connect");
-    }
-  }
-
-  function download(id) {
-      $window.open('http://localhost:8080/topology/api/generate/download/' + id);
+    }*/
   };
 
-  function getSVGString( svgNode ) {
+  /* return only Excel file in case not in topology screen */
+  function download(id) {
+      if($scope.svg !== null){
+          $window.open('http://localhost:8080/topology/api/generate/download/' + id);
+          $window.open('http://localhost:8080/topology/api/generate/downloadsvg/');
+      }
+      else {
+          $window.open('http://localhost:8080/topology/api/generate/download/' + id);
+      }
+  }
+
+  /** a method to extract the SVG string from D3 SVG file */
+  function getSVGString(svgNode) {
   	svgNode.setAttribute('xlink', 'http://www.w3.org/1999/xlink');
-  	var cssStyleText = getCSSStyles( svgNode );
-  	appendCSS( cssStyleText, svgNode );
+  	var cssStyleText = getCSSStyles(svgNode);
+  	appendCSS(cssStyleText, svgNode);
 
   	var serializer = new XMLSerializer();
   	var svgString = serializer.serializeToString(svgNode);
@@ -79,31 +111,31 @@ headerModule.controller('ButtonClick', function ($scope, $location, $http, $wind
 
   	return svgString;
 
-  	function getCSSStyles( parentElement ) {
+  	function getCSSStyles(parentElement) {
   		var selectorTextArr = [];
 
   		// Add Parent element Id and Classes to the list
-  		selectorTextArr.push( '#'+parentElement.id );
+  		selectorTextArr.push('#' + parentElement.id);
   		for (var c = 0; c < parentElement.classList.length; c++)
-  				if ( !contains('.'+parentElement.classList[c], selectorTextArr) )
-  					selectorTextArr.push( '.'+parentElement.classList[c] );
+  				if (!contains('.' + parentElement.classList[c], selectorTextArr))
+  					   selectorTextArr.push( '.' + parentElement.classList[c]);
 
   		// Add Children element Ids and Classes to the list
   		var nodes = parentElement.getElementsByTagName("*");
   		for (var i = 0; i < nodes.length; i++) {
-  			var id = nodes[i].id;
-  			if ( !contains('#'+id, selectorTextArr) )
-  				selectorTextArr.push( '#'+id );
+    			var id = nodes[i].id;
+    			if (!contains('#'+id, selectorTextArr))
+    				selectorTextArr.push( '#' + id);
 
-  			var classes = nodes[i].classList;
-  			for (var c = 0; c < classes.length; c++)
-  				if ( !contains('.'+classes[c], selectorTextArr) )
-  					selectorTextArr.push( '.'+classes[c] );
+    			var classes = nodes[i].classList;
+    			for (c = 0; c < classes.length; c++)
+      				if (!contains('.' + classes[c], selectorTextArr))
+      					   selectorTextArr.push( '.' + classes[c]);
   		}
 
   		// Extract CSS Rules
   		var extractedCSSText = "";
-  		for (var i = 0; i < document.styleSheets.length; i++) {
+  		for (i = 0; i < document.styleSheets.length; i++) {
   			var s = document.styleSheets[i];
 
   			try {
@@ -115,26 +147,24 @@ headerModule.controller('ButtonClick', function ($scope, $location, $http, $wind
 
   			var cssRules = s.cssRules;
   			for (var r = 0; r < cssRules.length; r++) {
-  				if ( contains( cssRules[r].selectorText, selectorTextArr ) )
-  					extractedCSSText += cssRules[r].cssText;
+    				if (contains( cssRules[r].selectorText, selectorTextArr ))
+    					   extractedCSSText += cssRules[r].cssText;
   			}
   		}
-
-
   		return extractedCSSText;
 
-  		function contains(str,arr) {
-  			return arr.indexOf( str ) === -1 ? false : true;
+  		function contains(str, arr) {
+  			   return arr.indexOf(str) === -1 ? false : true;
   		}
 
   	}
 
-  	function appendCSS( cssText, element ) {
-  		var styleElement = document.createElement("style");
-  		styleElement.setAttribute("type","text/css");
-  		styleElement.innerHTML = cssText;
-  		var refNode = element.hasChildNodes() ? element.children[0] : null;
-  		element.insertBefore( styleElement, refNode );
+  	function appendCSS(cssText, element) {
+    		var styleElement = document.createElement("style");
+    		styleElement.setAttribute("type", "text/css");
+    		styleElement.innerHTML = cssText;
+    		var refNode = element.hasChildNodes() ? element.children[0] : null;
+    		element.insertBefore(styleElement, refNode);
   	}
   }
 });

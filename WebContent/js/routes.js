@@ -18,7 +18,7 @@ var routesModule = angular.module('routes',['ngRoute']);
                 factory : function ($rootScope, $location) {
                     if(!$rootScope.isDataLoaded){
                       $location.path('/connect');
-                    };
+                    }
                 }
               }
           })
@@ -31,7 +31,7 @@ var routesModule = angular.module('routes',['ngRoute']);
                 factory : function ($rootScope, $location) {
                     if(!$rootScope.isDataLoaded){
                       $location.path('/connect');
-                    };
+                    }
                 }
               }
           })
@@ -44,7 +44,7 @@ var routesModule = angular.module('routes',['ngRoute']);
                 factory : function ($rootScope, $location) {
                     if(!$rootScope.isDataLoaded){
                       $location.path('/connect');
-                    };
+                    }
                 }
               }
           })
@@ -57,7 +57,7 @@ var routesModule = angular.module('routes',['ngRoute']);
                 factory : function ($rootScope, $location) {
                     if(!$rootScope.isDataLoaded){
                       $location.path('/connect');
-                    };
+                    }
                 }
               }
           })

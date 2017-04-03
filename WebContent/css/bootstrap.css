@@ -3813,7 +3813,7 @@ input[type="submit"].btn.btn-mini {
 
 /* line 6, bootstrap/_breadcrumbs.css.scss */
 .breadcrumb {
-    padding: 8px 15px;
+    padding: 4px 15px;
     margin: 0 0 20px;
     list-style: none;
     background-color: #f5f5f5;
