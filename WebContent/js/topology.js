@@ -268,10 +268,14 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
                 }
             })
             .catch(function(error){
-                $window.alert("Error retrieving full topology. Please try again.");
+                if(d3.select("svg")){
+                    d3.select("svg").remove();
+                    d3.select(".njg-metadata").remove();
+                }
                 $scope.responseReady = false;
                 $rootScope.isDataLoaded = false;
-                //$location.path('/connect');
+                $window.alert("Error retrieving full topology. Please try again.");
+                $location.path('/connect');
             });
 
     }
@@ -308,7 +312,12 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
               }
             })
             .catch(function(error){
+                if(d3.select("svg")){
+                    d3.select("svg").remove();
+                    d3.select(".njg-metadata").remove();
+                }
                 $window.alert("Error retrieving sink tree. Please try again.");
+                $location.path('/connect');
             });
 
     }
@@ -326,6 +335,10 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
                 $scope.routerfilter = $rootScope.connectionDetails.routerid;
             })
             .catch(function(error){
+                if(d3.select("svg")){
+                    d3.select("svg").remove();
+                    d3.select(".njg-metadata").remove();
+                }
                 $scope.responseReady = false;
                 $rootScope.isDataLoaded = false;
                 $window.alert("Error retrieving routers info. Please try again.");

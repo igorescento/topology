@@ -80,7 +80,11 @@ public class MikrotikResource {
 		//DEMO_TO_WORK_WITH_LSA_EXPORT_FROM_LIVE_ROUTER-----------------------
 
 		if(data.getIpaddress().equals("10.8.129.6")){
-
+			if(isRunning){
+				System.out.println("Cancelling timer. Starting demo mode.");
+				timer.cancel();
+			}
+			
 			try {
 				List<String> fromFile = new ArrayList<>();
 				deleteAllTables();

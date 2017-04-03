@@ -61,8 +61,7 @@ connectModule.factory('AuthenticationService',
 
                   })
                   .catch(function(error){
-                    //callback(error);
-                    $window.alert("Error occured while retrieving data. Please login again.");
+                      callback(error);
                   });
           }
         };
