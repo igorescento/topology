@@ -108,6 +108,7 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
           }
       }
     }
+    /* demo end */
 
     /* live data */
     else {
@@ -128,7 +129,8 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
                     getFullNetwork();
                     getRouters();
                     $scope.externalTitle = "Hide External";
-                }, 25000);
+                    console.log("timer on start 15sec");
+                }, 15000);
             }
 
             else {
@@ -190,22 +192,18 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
         $scope.Timer = $interval(function() {
             getRouters();
             getFullNetwork();
-        }, 60000);
+            console.log("second timer 10s");
+        }, 10000);
 
         /* Show / Hide external networks - nodes and links included */
         $scope.ShowExternal = function() {
-          $scope.externalTitle = $scope.externalTitle === "Hide External" ? "Show External" : "Hide External";
-          var externals = document.getElementsByClassName("external");
-          if($scope.externalTitle === "Show External"){
-              Array.from(externals).forEach(v => {
-                  v.style.display = "none";
-              })
-          }
-          else {
-              Array.from(externals).forEach(v => {
-                  v.style.display = "inherit";
-              })
-          }
+            var boolVal, externals;
+            
+            externals = document.getElementsByClassName("external");
+            $scope.externalTitle = $scope.externalTitle === "Hide External" ? "Show External" : "Hide External";
+            boolVal = $scope.externalTitle === "Hide External" ? true : false;
+
+            showExternals(externals, boolVal);
         }
 
     }
@@ -217,6 +215,21 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
             $interval.cancel(getDataPromise);
         }
     });
+
+    /* Show external function */
+    function showExternals(element, boolVal) {
+        if(!boolVal){
+          console.log("A");
+            Array.from(element).forEach(v => {
+                v.style.display = "none";
+            })
+        }
+        else {
+            Array.from(element).forEach(v => {
+                v.style.display = "inherit";
+            })
+        }
+    }
 
     /* Method to get the data from source DB */
     function getFullNetwork(){
@@ -240,6 +253,10 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
                     processData(response.data, $rootScope.connectionDetails.routerid);
                     $scope.responseReady = true;
                     $scope.background = "#ffffff";
+
+                    var externals = document.getElementsByClassName("external");
+                    var boolVal = $scope.externalTitle === "Hide External" ? true : false;
+                    showExternals(externals, boolVal);
                 }
                 else {
                     if(d3.select("svg")){
@@ -255,7 +272,7 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
                 console.log("Error retrieving full topology. Please try again." + error);
                 $scope.responseReady = false;
                 $rootScope.isDataLoaded = false;
-                $location.path('/connect');
+                //$location.path('/connect');
             });
 
     };
@@ -460,7 +477,7 @@ function processData(data, rId){
 
     newNodes = data.nodes;
     data.edges.forEach(function(row){
-        links.push({ "source": row.source.id, "target": row.destination.id, "cost": row.metric, "deleted": false, "type": row.type});
+        links.push({ "networkid": row.id, "netmask": row.mask, "source": row.source.id, "target": row.destination.id, "cost": row.metric, "deleted": false, "type": row.type});
     })
 
     /* check for same nodes / targets - need to be removed*/

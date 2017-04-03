@@ -19,12 +19,16 @@ public class Edge {
 	@JsonProperty
 	private String type;
 	
-	public Edge(String i, Node s, Node d, int m, String t) {
+	@JsonProperty
+	private String mask;
+	
+	public Edge(String i, Node s, Node d, int m, String t, String mask) {
 		this.id = i;
 		this.source = s;
 		this.destination = d;
 		this.metric = m;
 		this.type = t;
+		this.mask = mask;
 	}
 	
 	public Edge() {};
@@ -49,6 +53,10 @@ public class Edge {
 		return type;
 	}
 
+	public String getMask() {
+		return mask;
+	}
+	
 	@Override
 	public String toString() {
 		return source.getLabel() + " " + destination.getLabel();

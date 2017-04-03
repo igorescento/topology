@@ -38,8 +38,14 @@ router.controller('routersController', function($rootScope, $scope, $http, $loca
       $http(config)
           .then(function (response) {
               if(response.data.length > 0){
-                  $scope.items = response.data;
-                  $scope.totalRows = response.data.length;
+                  //$scope.items = response.data;
+                  //$scope.totalRows = response.data.length;
+                  $rootScope.tempRoutItems = $scope.items = response.data;
+                  $rootScope.tempRoutTotalRows = $scope.totalRows = response.data.length;
+              }
+              else {
+                  $scope.items = $rootScope.tempRoutItems;
+                  $scope.totalRows = $rootScope.tempRoutTotalRows;
               }
           })
           .catch(function(error){

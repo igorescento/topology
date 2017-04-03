@@ -88,11 +88,10 @@ public class LsaDAO extends GenericHibernateDAOFilter<Lsa, Integer>{
 		String interfaces;
 		
 		SQLQuery query = getSession().createSQLQuery("SELECT group_concat(inet_ntoa(id)) as external FROM mikrotik.lsa "
-				+ " where type = 'as-external' and id <> :routerid");
+				+ " where originator =:routerid and type = 'as-external' and id <> :routerid");
 		query.setParameter("routerid", routerid);
 		query.addScalar("external", new StringType());
 		interfaces = (String)query.uniqueResult();
-		
 		return interfaces;
 	}
 }

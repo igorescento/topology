@@ -44,8 +44,15 @@ network.controller('networksController', function($rootScope, $scope, $http, $lo
     $http(config)
         .then(function (response) {
             if(response.data.length > 0){
-                $scope.items = response.data;
-                $scope.totalRows = response.data.length;
+                $rootScope.tempNetItems = $scope.items = response.data;
+                $rootScope.tempNetTotalRows = $scope.totalRows = response.data.length;
+
+                //$scope.items = response.data;
+                //$scope.totalRows = response.data.length;
+            }
+            else {
+                $scope.items = $rootScope.tempNetItems;
+                $scope.totalRows = $rootScope.tempNetTotalRows;
             }
         })
         .catch(function(error){

@@ -87,7 +87,9 @@ public class TopologyResource {
 											new Edge(IPv4Converter.longToIpv4(n.getNetworkaddr()),
 													new Node(IPv4Converter.longToIpv4(r.getId()), IPv4Converter.longToIpv4(r.getId()), r.getType()), 
 													new Node(IPv4Converter.longToIpv4(Long.parseLong(router.trim())), IPv4Converter.longToIpv4(Long.parseLong(router.trim())), "router"),
-													r.getMetric(), "internal"
+													r.getMetric(),
+													"internal",
+													IPv4Converter.longToIpv4(n.getNetmask())
 													)
 											);
 								}
@@ -105,14 +107,18 @@ public class TopologyResource {
 											new Edge(IPv4Converter.longToIpv4(n.getNetworkaddr()),
 													new Node(IPv4Converter.longToIpv4(r.getId()), IPv4Converter.longToIpv4(r.getId()), r.getType()), 
 													swtch,
-													r.getMetric()/num, "internal"
+													r.getMetric()/num,
+													"switch",
+													IPv4Converter.longToIpv4(n.getNetmask())
 													)
 											);
 									edges.add(
 											new Edge(IPv4Converter.longToIpv4(n.getNetworkaddr()),
 													swtch,
 													new Node(IPv4Converter.longToIpv4(r.getId()), IPv4Converter.longToIpv4(r.getId()), r.getType()),
-													r.getMetric()/num, "internal"
+													r.getMetric()/num,
+													"switch",
+													IPv4Converter.longToIpv4(n.getNetmask())
 													)
 											);
 								}
@@ -149,7 +155,7 @@ public class TopologyResource {
 							}
 						}
 					
-						Edge extE = new Edge("External_Route", r, ext, metric, "external");
+						Edge extE = new Edge("External_Route", r, ext, metric, "external", "");
 						additional.add(ext);
 						edges.add(extE);						
 					}

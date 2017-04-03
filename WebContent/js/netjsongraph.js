@@ -106,7 +106,7 @@
             animationAtStart: true,
             scaleExtent: [0.25, 5],
             charge: -200, //-130 originally
-            linkDistance: 40,
+            linkDistance: 50,
             linkStrength: 0.4,
             friction: 0.9,  // d3 default
             chargeDistance: Infinity,  // d3 default
@@ -177,7 +177,6 @@
                     overlayInner = d3.select(".njg-overlay > .njg-inner"),
                     html = "";
 
-
                 if(n.type === "router"){
                     html += "<p><b>Router ID: </b>" + n.id + "</p>";
                     html += "<p><b>Interfaces: </b></p>";
@@ -190,7 +189,7 @@
                     }
                 }
                 if(n.type === "external"){
-                    html += "<p><b>External ID: </b>" + n.id + "</p>";
+                    html += "<p><b>External Router ID: </b>" + n.id.split("_")[1] + "</p>";
                     html += "<p><b>External Routes: </b></p>";
 
                     if(n.interf){
@@ -201,10 +200,12 @@
                     }
                 }
                 if(n.type === "switch"){
-                    html += "<p><b>Switch ID: </b>" + n.id + "</p>";
+                      html += "<p><b>Network ID: </b>" + n.id + "</p>";
                 }
                 if(n.linkCount) {
-                    html += "<p><b>Links</b>: " + n.linkCount + "</p>";
+                  if(n.type !== "external"){
+                      html += "<p><b>Links</b>: " + n.linkCount + "</p>";
+                  }
                 }
 
                 overlayInner.html(html);
@@ -219,16 +220,32 @@
             onClickLink: function(l) {
                 var overlay = d3.select(".njg-overlay"),
                     overlayInner = d3.select(".njg-overlay > .njg-inner"),
-                    html = "<p><b>Connected routers:</b></p>"
-                    html += "<p>&emsp;" + (l.source.label || l.source.id) + "</p>";
-                    html += "<p>&emsp;" + (l.target.label || l.target.id) + "</p>";
-                    html += "<p><b>Cost</b>: " + l.cost + "</p>";
-                if(l.properties) {
-                    for(var key in l.properties) {
-                        if(!l.properties.hasOwnProperty(key)) { continue; }
-                        html += "<p><b>"+ key.replace(/_/g, " ") +"</b>: " + l.properties[key] + "</p>";
+                    html ="";
+
+                    if(l.type === "internal"){
+                        html += "<p><b>Network ID:</b></p>";
+                        html += "<p>&emsp;" + l.networkid + "</p>";
+                        html += "<p><b>Netmask:</b></p>";
+                        html += "<p>&emsp;" + l.netmask + "</p>";
+                        html += "<p><b>Connected devices:</b></p>";
+                        html += "<p>&emsp;" + (l.source.label || l.source.id) + "</p>";
+                        html += "<p>&emsp;" + (l.target.label || l.target.id) + "</p>";
+                        html += "<p><b>Cost</b>: " + l.cost + "</p>";
                     }
-                }
+                    if(l.type === "external"){
+                        html += "<p><b>" + l.networkid + "</b></p>";
+                        html += "<p><b>Source Router:</b></p>";
+                        html += "<p>&emsp;" + (l.source.label || l.source.id) + "</p>";
+                        html += "<p><b>Cost</b>: " + l.cost + "</p>";
+                    }
+                    if(l.type === "switch"){
+                        html += "<p><b>Network ID:</b></p>";
+                        html += "<p>&emsp;" + l.networkid + "</p>";
+                        html += "<p><b>Netmask:</b></p>";
+                        html += "<p>&emsp;" + l.netmask + "</p>";
+                        html += "<p><b>Cost</b>: " + l.cost + "</p>";
+                    }
+
                 overlayInner.html(html);
                 overlay.classed("njg-hidden", false);
                 overlay.style("display", "block");
@@ -371,7 +388,14 @@
                                  .call(drag),
 
                     labels = groups.append('text')
-                                   .text(function(n){ return n.label || n.id })
+                                   .text(function(n){
+                                        if(n.type === "external" || n.type === "switch"){
+                                          return "";
+                                        }
+                                        else {
+                                          return n.label || n.id;
+                                        }
+                                    })
                                    .attr('dx', opts.labelDx)
                                    .attr('dy', opts.labelDy)
                     .attr('class', 'njg-tooltip');

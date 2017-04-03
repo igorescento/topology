@@ -360,6 +360,7 @@ select#topologyselect {
 .button-lsa:disabled,
 .button-router:disabled,
 .button-network:disabled,
+.button-export:disabled,
 .button-topology:disabled {
     cursor: not-allowed;
     opacity: 0.65;
@@ -369,6 +370,7 @@ select#topologyselect {
 .button-lsa,
 .button-router,
 .button-network,
+.button-export,
 .button-topology {
     border-radius: 4px;
     padding: 3px 7px;
