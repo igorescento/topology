@@ -2,7 +2,7 @@
 
 var netModule = angular.module('topology', []);
 
-netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, $timeout, $location) {
+netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, $timeout, $location, $window) {
 
     $scope.buttonTitle = "Show Sink Tree";
     $scope.header = "Complete";
@@ -89,7 +89,7 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
                   var links;
                   if(destination !== '' && $scope.routerfilter){
                       if(destination === $scope.routerfilter){
-                          console.log("Same router selected.");
+                          $window.alert("Same router selected. Please select a different router.");
                           links = d3.selectAll(".njg-link")[0];
                           for(var j = 0; j < links.length; j++) {
                               links[j].style.stroke = "#999";
@@ -130,8 +130,7 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
                     getFullNetwork();
                     getRouters();
                     $scope.externalTitle = "Hide External";
-                    console.log("timer on start 60sec");
-                }, 60000);
+                }, 30000);
             }
 
             else {
@@ -154,7 +153,7 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
                     if(destination !== '' && $scope.routerfilter){
                         var links;
                         if(destination === $scope.routerfilter){
-                            console.log("Same router selected.");
+                            $window.alert("Same router selected. Please select a different router.");
                             links = d3.selectAll(".njg-link")[0];
                             for(var k = 0; k < links.length; k++) {
                                 links[k].style.stroke = "#999";
@@ -194,8 +193,7 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
         $scope.Timer = $interval(function() {
             getRouters();
             getFullNetwork();
-            console.log("second timer 60s");
-        }, 60000);
+        }, 30000);
 
         /* Show / Hide external networks - nodes and links included */
         $scope.ShowExternal = function() {
@@ -270,7 +268,7 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
                 }
             })
             .catch(function(error){
-                console.log("Error retrieving full topology. Please try again." + error);
+                $window.alert("Error retrieving full topology. Please try again.");
                 $scope.responseReady = false;
                 $rootScope.isDataLoaded = false;
                 //$location.path('/connect');
@@ -310,14 +308,13 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
               }
             })
             .catch(function(error){
-                console.log("Error retrieving sink tree. Please try again." + error);
+                $window.alert("Error retrieving sink tree. Please try again.");
             });
 
     }
 
     /* Method to get the routers for selector*/
     function getRouters(){
-
         var config = {
             method: 'GET',
             url: 'http://localhost:8080/topology/api/type/distinctrouter'
@@ -331,7 +328,7 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
             .catch(function(error){
                 $scope.responseReady = false;
                 $rootScope.isDataLoaded = false;
-                console.log("Error retrieving routers info. Please try again." + error);
+                $window.alert("Error retrieving routers info. Please try again.");
             });
     }
 
@@ -369,11 +366,11 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
                   }
                 }
                 else {
-                  console.log("Request unsuccessful due to database update. Try again.");
+                  $window.alert("Request unsuccessful due to database update. Please try again.");
                 }
             })
             .catch(function(error){
-                console.log("Error retrieving shortest path data due to possible overlap with DB update. Please try again. " + error);
+                $window.alert("Error retrieving shortest path data due to possible overlap with DB update. Please try again.");
             });
 
     }
@@ -412,7 +409,7 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
               }
             })
             .catch(function(error){
-                console.log("Error retrieving sink tree. Please try again." + error);
+                $window.alert("Error retrieving sink tree. Please try again.");
             });
 
     }
@@ -451,11 +448,11 @@ netModule.controller('netgraph', function($rootScope, $scope, $http, $interval, 
                   }
                 }
                 else {
-                  console.log("Request unsuccessful due to database update. Try again.");
+                  $window.alert("Request unsuccessful due to database update. Please try again.");
                 }
             })
             .catch(function(error){
-                console.log("Error retrieving shortest path data due to possible overlap with DB update. Please try again. " + error);
+                $window.alert("Error retrieving shortest path data due to possible overlap with DB update. Please try again.");
             });
 
     }

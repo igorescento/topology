@@ -4,7 +4,7 @@ var connectModule = angular.module('connect', []);
 
 connectModule.factory('AuthenticationService',
     ['$http', '$rootScope', '$timeout', '$location',
-    function ($http, $rootScope, $timeout, $location) {
+    function ($http, $rootScope, $timeout, $location, $window) {
         var service = {};
 
         service.Login = function (ipaddress, username, password, callback) {
@@ -56,12 +56,13 @@ connectModule.factory('AuthenticationService',
                             $location.path('/network');
                           })
                           .catch(function(error){
-                              console.log("Error displaying topology. " + error);
+                              $window.alert("Error occured while retrieving data. Please login again.");
                           });
 
                   })
                   .catch(function(error){
-                    callback(error);
+                    //callback(error);
+                    $window.alert("Error occured while retrieving data. Please login again.");
                   });
           }
         };

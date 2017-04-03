@@ -1,6 +1,6 @@
 var network = angular.module('network', []);
 
-network.controller('networksController', function($rootScope, $scope, $http, $location) {
+network.controller('networksController', function($rootScope, $scope, $http, $location, $window) {
 
     var headers = [
       { name: "id", value:"ID" },
@@ -30,7 +30,7 @@ network.controller('networksController', function($rootScope, $scope, $http, $lo
                 $scope.totalRows = res.data.length;
             })
             .catch(function(error){
-              console.log("Error retrieving networks data. Please try again.");
+              $window.alert("Error retrieving network data. Please try again.");
               $location.path('/connect');
           });
 
@@ -56,7 +56,7 @@ network.controller('networksController', function($rootScope, $scope, $http, $lo
               }
           })
           .catch(function(error){
-              console.log("Error retrieving networks data. Please try again. " + error);
+              w("Error retrieving network data. Please try again.");
               $location.path('/connect');
 
           });

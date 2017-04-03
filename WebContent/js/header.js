@@ -42,7 +42,7 @@ headerModule.controller('ButtonClick', function ($scope, $rootScope, $location, 
                 download(response.data);
             })
             .catch(function(error){
-                console.log("Error retrieving networks data. Please try again. " + error);
+                $window.alert("Error occured while generating report. Please login and try again.");
             });
     }
 
@@ -58,7 +58,6 @@ headerModule.controller('ButtonClick', function ($scope, $rootScope, $location, 
       if(value.currentTarget.className === key){
         found = true;
         if(mappings[key] === "export"){
-            console.log("Export");
             var svg = d3.select("svg").node();
             var svgString = getSVGString(svg);*/
 
@@ -73,11 +72,9 @@ headerModule.controller('ButtonClick', function ($scope, $rootScope, $location, 
             };
             $http(config)
                 .then(function (response) {
-                    console.log(response);
                     download(response.data);
                 })
                 .catch(function(error){
-                    console.log("Error retrieving networks data. Please try again. " + error);
                 });
         }
         else {

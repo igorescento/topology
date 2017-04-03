@@ -1,6 +1,6 @@
 var router = angular.module('router', []);
 
-router.controller('routersController', function($rootScope, $scope, $http, $location) {
+router.controller('routersController', function($rootScope, $scope, $http, $location, $window) {
 
     var headers = [
       { name: "id", value:"ID" },
@@ -24,7 +24,7 @@ router.controller('routersController', function($rootScope, $scope, $http, $loca
                 $scope.totalRows = res.data.length;
             })
             .catch(function(error){
-              console.log("Error retrieving demo data.");
+              $window.alert("Error retrieving demo data. Try again.");
               $location.path('/connect');
           });
       }
@@ -48,7 +48,7 @@ router.controller('routersController', function($rootScope, $scope, $http, $loca
                   }
               })
               .catch(function(error){
-                  console.log("ERROR RETRIEVING ROUTER DATA: " + error);
+                  $window.alert("Error retrieving router data. Try again.");
                   $location.path('/connect');
 
               });

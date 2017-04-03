@@ -1,6 +1,6 @@
 var lsa = angular.module('lsa', []);
 
-lsa.controller('lsaController', function($rootScope, $scope, $http, $location) {
+lsa.controller('lsaController', function($rootScope, $scope, $http, $location, $window) {
 
     /* table headers */
     var headers = [
@@ -27,8 +27,8 @@ lsa.controller('lsaController', function($rootScope, $scope, $http, $location) {
                 $scope.totalRows = res.data.length;
             })
             .catch(function(error){
-              console.log("Error retrieving demo data.");
-              $location.path('/connect');
+                $window.alert("Error occured while retrieving demo data. Please try again.");
+                $location.path('/connect');
           });
     }
     else {
@@ -45,7 +45,7 @@ lsa.controller('lsaController', function($rootScope, $scope, $http, $location) {
                 }
             })
             .catch(function(error){
-                console.log("Error retrieving LSA data. Please try again. " + error);
+                $window.alert("Error retrieving LSA data. Please try again.");
                 $location.path('/connect');
 
             });

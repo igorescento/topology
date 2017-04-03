@@ -137,11 +137,11 @@ public class MikrotikResource {
 						else {
 							timer.cancel();
 							timer = new Timer("Refresh");
-							timer.scheduleAtFixedRate(tt, 0, 15000);
+							timer.scheduleAtFixedRate(tt, 0, 30000);
 							System.out.println("Timer cancelled, new one scheduled");
 						}
 					} else {
-						timer.scheduleAtFixedRate(tt, 0, 60000);
+						timer.scheduleAtFixedRate(tt, 0, 30000);
 						isRunning = true;
 						System.out.println("New timer scheduled.");
 					}
