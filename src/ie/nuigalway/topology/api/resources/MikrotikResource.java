@@ -81,13 +81,16 @@ public class MikrotikResource {
 
 		if(data.getIpaddress().equals("10.8.129.6")){
 
-			try{
+			try {
 				List<String> fromFile = new ArrayList<>();
-				fromFile = FileUtils.readLines(new File(loader.getResource("lsa-detail.txt").getFile()), "UTF-8");
 				deleteAllTables();
+				
+				fromFile = FileUtils.readLines(new File(loader.getResource("lsa-detail.txt").getFile()), "UTF-8");
 				updateDemoFile(fromFile);
+				
 				updateNetsTable();
 				updateRoutersTable();
+				
 				return Response.ok().build();
 			} catch (IOException e) {
 				e.printStackTrace();
