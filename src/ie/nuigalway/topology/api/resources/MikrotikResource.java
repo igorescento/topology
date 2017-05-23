@@ -17,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.net.util.SubnetUtils;
 import org.apache.commons.net.util.SubnetUtils.SubnetInfo;
 import org.hibernate.HibernateException;
@@ -88,8 +89,8 @@ public class MikrotikResource {
 			try {
 				List<String> fromFile = new ArrayList<>();
 				deleteAllTables();
-				
-				fromFile = FileUtils.readLines(new File(loader.getResource("lsa-detail.txt").getFile()), "UTF-8");
+				//fromFile = FileUtils.readLines(new File(loader.getResource("lsa-detail.txt").getFile()), "UTF-8");
+				fromFile = IOUtils.readLines(this.getClass().getResourceAsStream("/lsa-detail.txt"), "UTF-8");
 				updateDemoFile(fromFile);
 				
 				updateNetsTable();
